@@ -7808,10 +7808,10 @@ r</credit-words>
       </attributes>
       <figured-bass>
         <figure>
-          <figure-number>4</figure-number>
+          <figure-number>6</figure-number>
         </figure>
         <figure>
-          <figure-number>6</figure-number>
+          <figure-number>4</figure-number>
         </figure>
         <duration>8</duration>
       </figured-bass>
@@ -7828,10 +7828,10 @@ r</credit-words>
       </note>
       <figured-bass>
         <figure>
-          <figure-number>4</figure-number>
+          <figure-number>6</figure-number>
         </figure>
         <figure>
-          <figure-number>6</figure-number>
+          <figure-number>4</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
@@ -7856,10 +7856,10 @@ r</credit-words>
       </note>
       <figured-bass>
         <figure>
-          <figure-number>3</figure-number>
+          <figure-number>7</figure-number>
         </figure>
         <figure>
-          <figure-number>7</figure-number>
+          <figure-number>3</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
@@ -7893,12 +7893,6 @@ r</credit-words>
           <figure-number>9</figure-number>
         </figure>
         <duration>4</duration>
-      </figured-bass>
-      <figured-bass>
-        <figure>
-          <figure-number>3</figure-number>
-        </figure>
-        <duration>8</duration>
       </figured-bass>
       <note default-x="16.875">
         <pitch>
@@ -8005,10 +7999,10 @@ r</credit-words>
       </note>
       <figured-bass>
         <figure>
-          <figure-number>4</figure-number>
+          <figure-number>6</figure-number>
         </figure>
         <figure>
-          <figure-number>6</figure-number>
+          <figure-number>4</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
@@ -8187,10 +8181,10 @@ r</credit-words>
       </note>
       <figured-bass>
         <figure>
-          <figure-number>3</figure-number>
+          <figure-number>4</figure-number>
         </figure>
         <figure>
-          <figure-number>4</figure-number>
+          <figure-number>3</figure-number>
         </figure>
         <duration>2</duration>
       </figured-bass>
@@ -8297,10 +8291,10 @@ r</credit-words>
       </attributes>
       <figured-bass>
         <figure>
-          <figure-number>5</figure-number>
+          <figure-number>6</figure-number>
         </figure>
         <figure>
-          <figure-number>6</figure-number>
+          <figure-number>5</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
@@ -8317,10 +8311,10 @@ r</credit-words>
       </note>
       <figured-bass>
         <figure>
-          <figure-number>5</figure-number>
+          <figure-number>6</figure-number>
         </figure>
         <figure>
-          <figure-number>6</figure-number>
+          <figure-number>5</figure-number>
         </figure>
         <duration>2</duration>
       </figured-bass>
@@ -8338,10 +8332,10 @@ r</credit-words>
       </note>
       <figured-bass>
         <figure>
-          <figure-number>2</figure-number>
+          <figure-number>4</figure-number>
         </figure>
         <figure>
-          <figure-number>4</figure-number>
+          <figure-number>2</figure-number>
         </figure>
         <duration>2</duration>
       </figured-bass>
@@ -8419,10 +8413,10 @@ r</credit-words>
       </figured-bass>
       <figured-bass>
         <figure>
-          <figure-number>3</figure-number>
+          <figure-number>4</figure-number>
         </figure>
         <figure>
-          <figure-number>4</figure-number>
+          <figure-number>3</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
@@ -8440,10 +8434,10 @@ r</credit-words>
       </note>
       <figured-bass>
         <figure>
-          <figure-number>3</figure-number>
+          <figure-number>4</figure-number>
         </figure>
         <figure>
-          <figure-number>4</figure-number>
+          <figure-number>3</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
@@ -8495,10 +8489,10 @@ r</credit-words>
       </note>
       <figured-bass>
         <figure>
-          <figure-number>5</figure-number>
+          <figure-number>6</figure-number>
         </figure>
         <figure>
-          <figure-number>6</figure-number>
+          <figure-number>5</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
@@ -8515,10 +8509,10 @@ r</credit-words>
       </note>
       <figured-bass>
         <figure>
-          <figure-number>3</figure-number>
+          <figure-number>4</figure-number>
         </figure>
         <figure>
-          <figure-number>4</figure-number>
+          <figure-number>3</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
@@ -8541,10 +8535,10 @@ r</credit-words>
       </attributes>
       <figured-bass>
         <figure>
-          <figure-number>4</figure-number>
+          <figure-number>6</figure-number>
         </figure>
         <figure>
-          <figure-number>6</figure-number>
+          <figure-number>4</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
@@ -8561,10 +8555,10 @@ r</credit-words>
       </note>
       <figured-bass>
         <figure>
-          <figure-number>5</figure-number>
+          <figure-number>7</figure-number>
         </figure>
         <figure>
-          <figure-number>7</figure-number>
+          <figure-number>5</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
@@ -8582,10 +8576,10 @@ r</credit-words>
       </note>
       <figured-bass>
         <figure>
-          <figure-number>4</figure-number>
+          <figure-number>6</figure-number>
         </figure>
         <figure>
-          <figure-number>6</figure-number>
+          <figure-number>4</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
@@ -8630,10 +8624,10 @@ r</credit-words>
       </attributes>
       <figured-bass>
         <figure>
-          <figure-number>4</figure-number>
+          <figure-number>6</figure-number>
         </figure>
         <figure>
-          <figure-number>6</figure-number>
+          <figure-number>4</figure-number>
         </figure>
         <duration>2</duration>
       </figured-bass>
@@ -8651,10 +8645,10 @@ r</credit-words>
       </note>
       <figured-bass>
         <figure>
-          <figure-number>5</figure-number>
+          <figure-number>7</figure-number>
         </figure>
         <figure>
-          <figure-number>7</figure-number>
+          <figure-number>5</figure-number>
         </figure>
         <duration>2</duration>
       </figured-bass>
@@ -8672,10 +8666,10 @@ r</credit-words>
       </note>
       <figured-bass>
         <figure>
-          <figure-number>4</figure-number>
+          <figure-number>6</figure-number>
         </figure>
         <figure>
-          <figure-number>6</figure-number>
+          <figure-number>4</figure-number>
         </figure>
         <duration>2</duration>
       </figured-bass>
@@ -8827,10 +8821,10 @@ r</credit-words>
       </figured-bass>
       <figured-bass>
         <figure>
-          <figure-number>5</figure-number>
+          <figure-number>9</figure-number>
         </figure>
         <figure>
-          <figure-number>9</figure-number>
+          <figure-number>5</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
@@ -9020,10 +9014,10 @@ r</credit-words>
       </attributes>
       <figured-bass>
         <figure>
-          <figure-number>5</figure-number>
+          <figure-number>7</figure-number>
         </figure>
         <figure>
-          <figure-number>7</figure-number>
+          <figure-number>5</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
@@ -9051,12 +9045,6 @@ r</credit-words>
       <figured-bass>
         <figure>
           <figure-number>6</figure-number>
-        </figure>
-        <duration>4</duration>
-      </figured-bass>
-      <figured-bass>
-        <figure>
-          <figure-number>3</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
@@ -9117,10 +9105,10 @@ r</credit-words>
       </note>
       <figured-bass>
         <figure>
-          <figure-number>5</figure-number>
+          <figure-number>6</figure-number>
         </figure>
         <figure>
-          <figure-number>6</figure-number>
+          <figure-number>5</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
@@ -9186,10 +9174,10 @@ r</credit-words>
       </figured-bass>
       <figured-bass>
         <figure>
-          <figure-number>3</figure-number>
+          <figure-number>4</figure-number>
         </figure>
         <figure>
-          <figure-number>4</figure-number>
+          <figure-number>3</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
@@ -9216,10 +9204,10 @@ r</credit-words>
       </figured-bass>
       <figured-bass>
         <figure>
-          <figure-number>3</figure-number>
+          <figure-number>4</figure-number>
         </figure>
         <figure>
-          <figure-number>4</figure-number>
+          <figure-number>3</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
@@ -9242,19 +9230,19 @@ r</credit-words>
       </attributes>
       <figured-bass>
         <figure>
-          <figure-number>4</figure-number>
+          <figure-number>6</figure-number>
         </figure>
         <figure>
-          <figure-number>6</figure-number>
+          <figure-number>4</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
       <figured-bass>
         <figure>
-          <figure-number>2</figure-number>
+          <figure-number>4</figure-number>
         </figure>
         <figure>
-          <figure-number>4</figure-number>
+          <figure-number>2</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
@@ -9294,10 +9282,10 @@ r</credit-words>
       </figured-bass>
       <figured-bass>
         <figure>
-          <figure-number>5</figure-number>
+          <figure-number>7</figure-number>
         </figure>
         <figure>
-          <figure-number>7</figure-number>
+          <figure-number>5</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
@@ -9325,19 +9313,19 @@ r</credit-words>
       </figured-bass>
       <figured-bass>
         <figure>
-          <figure-number>5</figure-number>
+          <figure-number>7</figure-number>
         </figure>
         <figure>
-          <figure-number>7</figure-number>
+          <figure-number>5</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
       <figured-bass>
         <figure>
-          <figure-number>3</figure-number>
+          <figure-number>7</figure-number>
         </figure>
         <figure>
-          <figure-number>7</figure-number>
+          <figure-number>3</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
@@ -9382,10 +9370,10 @@ r</credit-words>
       </figured-bass>
       <figured-bass>
         <figure>
-          <figure-number>5</figure-number>
+          <figure-number>9</figure-number>
         </figure>
         <figure>
-          <figure-number>9</figure-number>
+          <figure-number>5</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
