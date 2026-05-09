@@ -7,6 +7,7 @@ test-*.json
 
 # Generated MusicXML outputs from analyzer
 *-figured-bass.musicxml
+*.musicxml
 
 # Generated text/json analysis reports
 *analysis-report.txt
@@ -17,6 +18,7 @@ fugue-colored.pdf
 fugue-professional-report.pdf
 fugue-complete-analysis.pdf
 rule-review.pdf
+*.pdf
 
 # Common local OS/editor noise
 .DS_Store
