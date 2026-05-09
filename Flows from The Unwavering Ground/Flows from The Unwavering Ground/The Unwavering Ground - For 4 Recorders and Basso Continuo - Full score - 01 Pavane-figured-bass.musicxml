@@ -185,6 +185,47 @@
   </part-list>
   <part id="P1">
     <measure number="1" width="283.75">
+    <direction placement="above">
+      <direction-type>
+        <words default-x="10" default-y="102" font-weight="bold" enclosure="rectangle">Voice-Leading Flags (R# on notes = multiple rules)</words>
+      </direction-type>
+    </direction>
+    <direction placement="above">
+      <direction-type>
+        <words default-x="18" default-y="84" color="#D7263D" font-weight="bold" enclosure="rectangle">1. [Crimson Red] Parallel P5ths</words>
+      </direction-type>
+    </direction>
+    <direction placement="above">
+      <direction-type>
+        <words default-x="18" default-y="72" color="#F46036" font-weight="bold" enclosure="rectangle">2. [Vermilion Orange] Parallel octaves</words>
+      </direction-type>
+    </direction>
+    <direction placement="above">
+      <direction-type>
+        <words default-x="18" default-y="60" color="#2E294E" font-weight="bold" enclosure="rectangle">3. [Indigo] Parallel unisons</words>
+      </direction-type>
+    </direction>
+    <direction placement="above">
+      <direction-type>
+        <words default-x="18" default-y="48" color="#6A4C93" font-weight="bold" enclosure="rectangle">5. [Royal Purple] Direct 5ths</words>
+      </direction-type>
+    </direction>
+    <direction placement="above">
+      <direction-type>
+        <words default-x="18" default-y="36" color="#3A86FF" font-weight="bold" enclosure="rectangle">6. [Azure Blue] Voice crossing</words>
+      </direction-type>
+    </direction>
+    <direction placement="above">
+      <direction-type>
+        <words default-x="18" default-y="24" color="#8338EC" font-weight="bold" enclosure="rectangle">9. [Violet] Large leap</words>
+      </direction-type>
+    </direction>
+    <direction placement="above">
+      <direction-type>
+        <words default-x="18" default-y="12" color="#FFBE0B" font-weight="bold" enclosure="rectangle">10. [Golden Yellow] Leading tone unresolved</words>
+      </direction-type>
+    </direction>
+
       <print>
         <system-layout>
           <system-margins>
@@ -429,7 +470,7 @@
         <stem default-y="-25">down</stem>
         <staff>1</staff>
       </note>
-      <note default-x="118.125">
+      <note color="#D7263D" default-x="118.125">
         <pitch>
           <step>C</step>
           <octave>5</octave>
@@ -439,14 +480,18 @@
         <type>quarter</type>
         <stem default-y="-47.5">down</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R1</text>
+        </lyric></note>
     </measure>
     <measure number="7" width="219.375">
       <print new-system="no" new-page="no"/>
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="16.875">
+      <note color="#D7263D" default-x="16.875">
         <pitch>
           <step>D</step>
           <octave>5</octave>
@@ -457,7 +502,11 @@
         <dot/>
         <stem default-y="-43.75">down</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R1</text>
+        </lyric></note>
       <note default-x="88.125">
         <pitch>
           <step>D</step>
@@ -545,7 +594,7 @@
       <forward>
         <duration>8</duration>
       </forward>
-      <note default-x="137.5">
+      <note color="#8338EC" default-x="137.5">
         <pitch>
           <step>D</step>
           <octave>6</octave>
@@ -555,7 +604,11 @@
         <type>quarter</type>
         <stem default-y="-20">down</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R9</text>
+        </lyric></note>
       <note default-x="196.875">
         <pitch>
           <step>B</step>
@@ -818,7 +871,7 @@
         <staff>1</staff>
         <beam number="1">end</beam>
       </note>
-      <note default-x="171.875">
+      <note color="#6A4C93" default-x="171.875">
         <pitch>
           <step>C</step>
           <octave>6</octave>
@@ -832,7 +885,11 @@
         <notations>
           <tied type="start" number="1" orientation="over" default-x="6.875" default-y="27.5" bezier-x="21.875" bezier-y="8.125"/>
         </notations>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R5</text>
+        </lyric></note>
       <note default-x="246.25">
         <pitch>
           <step>C</step>
@@ -867,7 +924,7 @@
         <stem default-y="-20">down</stem>
         <staff>1</staff>
       </note>
-      <note default-x="128.75">
+      <note color="#F46036" default-x="128.75">
         <pitch>
           <step>C</step>
           <octave>6</octave>
@@ -877,8 +934,12 @@
         <type>eighth</type>
         <stem default-y="-20">down</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="181.25">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
+      <note color="#F46036" default-x="181.25">
         <pitch>
           <step>D</step>
           <octave>6</octave>
@@ -888,7 +949,11 @@
         <type>quarter</type>
         <stem default-y="-20">down</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
       <note default-x="255.625">
         <pitch>
           <step>D</step>
@@ -1126,7 +1191,7 @@
         <stem default-y="-35">down</stem>
         <staff>1</staff>
       </note>
-      <note default-x="118.125">
+      <note color="#D7263D" default-x="118.125">
         <pitch>
           <step>F</step>
           <octave>4</octave>
@@ -1136,14 +1201,18 @@
         <type>quarter</type>
         <stem default-y="-0">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R1,6,9</text>
+        </lyric></note>
     </measure>
     <measure number="7" width="219.375">
       <print new-system="no" new-page="no"/>
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="16.875">
+      <note color="#D7263D" default-x="16.875">
         <pitch>
           <step>G</step>
           <octave>4</octave>
@@ -1153,8 +1222,12 @@
         <type>quarter</type>
         <stem default-y="3.75">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="58.75">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R1</text>
+        </lyric></note>
+      <note color="#3A86FF" default-x="58.75">
         <pitch>
           <step>G</step>
           <octave>4</octave>
@@ -1165,7 +1238,11 @@
         <stem default-y="5">up</stem>
         <staff>1</staff>
         <beam number="1">begin</beam>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R6</text>
+        </lyric></note>
       <note default-x="88.125">
         <pitch>
           <step>F</step>
@@ -1191,7 +1268,7 @@
         <stem default-y="-0">up</stem>
         <staff>1</staff>
       </note>
-      <note default-x="159.375">
+      <note color="#3A86FF" default-x="159.375">
         <pitch>
           <step>G</step>
           <octave>4</octave>
@@ -1202,7 +1279,11 @@
         <stem default-y="7.5">up</stem>
         <staff>1</staff>
         <beam number="1">begin</beam>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R6</text>
+        </lyric></note>
       <note default-x="189.375">
         <pitch>
           <step>A</step>
@@ -1626,7 +1707,7 @@
         <staff>1</staff>
         <beam number="1">begin</beam>
       </note>
-      <note default-x="308.125">
+      <note color="#FFBE0B" default-x="308.125">
         <pitch>
           <step>E</step>
           <octave>5</octave>
@@ -1637,7 +1718,11 @@
         <stem default-y="-42.5">down</stem>
         <staff>1</staff>
         <beam number="1">end</beam>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R10</text>
+        </lyric></note>
     </measure>
     <measure number="16" width="168.75">
       <print new-system="no" new-page="no"/>
@@ -1914,7 +1999,7 @@
         <stem default-y="7.5">up</stem>
         <staff>1</staff>
       </note>
-      <note default-x="118.125">
+      <note color="#3A86FF" default-x="118.125">
         <pitch>
           <step>A</step>
           <octave>4</octave>
@@ -1924,7 +2009,11 @@
         <type>quarter</type>
         <stem default-y="7.5">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R6</text>
+        </lyric></note>
     </measure>
     <measure number="7" width="219.375">
       <print new-system="no" new-page="no"/>
@@ -1943,7 +2032,7 @@
         <stem default-y="11.25">up</stem>
         <staff>1</staff>
       </note>
-      <note default-x="58.75">
+      <note color="#3A86FF" default-x="58.75">
         <pitch>
           <step>E</step>
           <octave>4</octave>
@@ -1953,8 +2042,12 @@
         <type>half</type>
         <stem default-y="-5">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="159.375">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R6,10</text>
+        </lyric></note>
+      <note color="#D7263D" default-x="159.375">
         <pitch>
           <step>A</step>
           <octave>4</octave>
@@ -1964,14 +2057,18 @@
         <type>quarter</type>
         <stem default-y="7.5">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R1,6</text>
+        </lyric></note>
     </measure>
     <measure number="8" width="103.75">
       <print new-system="no" new-page="no"/>
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="20">
+      <note color="#D7263D" default-x="20">
         <pitch>
           <step>D</step>
           <octave>4</octave>
@@ -1980,7 +2077,11 @@
         <voice>1</voice>
         <type>whole</type>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R1</text>
+        </lyric></note>
       <barline location="right">
         <bar-style>light-heavy</bar-style>
         <repeat direction="backward"/>
@@ -2093,7 +2194,7 @@
         <type>half</type>
         <staff>1</staff>
       </note>
-      <note default-x="117.5">
+      <note color="#F46036" default-x="117.5">
         <pitch>
           <step>G</step>
           <octave>4</octave>
@@ -2103,8 +2204,12 @@
         <type>quarter</type>
         <stem default-y="3.75">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="165">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2,3</text>
+        </lyric></note>
+      <note color="#F46036" default-x="165">
         <pitch>
           <step>D</step>
           <octave>4</octave>
@@ -2114,7 +2219,11 @@
         <type>quarter</type>
         <stem default-y="-10">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2,3</text>
+        </lyric></note>
     </measure>
     <measure number="12" width="210">
       <print new-system="no" new-page="no"/>
@@ -2208,7 +2317,7 @@
         <type>half</type>
         <staff>1</staff>
       </note>
-      <note default-x="246.25">
+      <note color="#F46036" default-x="246.25">
         <pitch>
           <step>F</step>
           <octave>4</octave>
@@ -2218,8 +2327,12 @@
         <type>quarter</type>
         <stem default-y="-0">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="321.25">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
+      <note color="#F46036" default-x="321.25">
         <pitch>
           <step>A</step>
           <octave>4</octave>
@@ -2229,7 +2342,11 @@
         <type>quarter</type>
         <stem default-y="7.5">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
     </measure>
     <measure number="15" width="361.25">
       <print new-system="no" new-page="no"/>
@@ -2248,7 +2365,7 @@
         <stem default-y="-10">up</stem>
         <staff>1</staff>
       </note>
-      <note default-x="128.75">
+      <note color="#D7263D" default-x="128.75">
         <pitch>
           <step>G</step>
           <octave>4</octave>
@@ -2258,8 +2375,12 @@
         <type>eighth</type>
         <stem default-y="5">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="181.25">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R1</text>
+        </lyric></note>
+      <note color="#D7263D" default-x="181.25">
         <pitch>
           <step>A</step>
           <octave>4</octave>
@@ -2269,8 +2390,12 @@
         <type>quarter</type>
         <stem default-y="7.5">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="255.625">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R1</text>
+        </lyric></note>
+      <note color="#D7263D" default-x="255.625">
         <pitch>
           <step>A</step>
           <octave>4</octave>
@@ -2280,14 +2405,18 @@
         <type>quarter</type>
         <stem default-y="7.5">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R1</text>
+        </lyric></note>
     </measure>
     <measure number="16" width="168.75">
       <print new-system="no" new-page="no"/>
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="20">
+      <note color="#D7263D" default-x="20">
         <pitch>
           <step>D</step>
           <octave>4</octave>
@@ -2296,7 +2425,11 @@
         <voice>1</voice>
         <type>whole</type>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R1</text>
+        </lyric></note>
       <barline location="right">
         <bar-style>light-heavy</bar-style>
         <repeat direction="backward"/>
@@ -2338,7 +2471,7 @@
           <octave-change>1</octave-change>
         </transpose>
       </attributes>
-      <note default-x="93.75">
+      <note color="#F46036" default-x="93.75">
         <pitch>
           <step>G</step>
           <octave>2</octave>
@@ -2348,8 +2481,12 @@
         <type>half</type>
         <stem default-y="-5">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="181.25">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
+      <note color="#F46036" default-x="181.25">
         <pitch>
           <step>G</step>
           <octave>3</octave>
@@ -2359,14 +2496,18 @@
         <type>half</type>
         <stem default-y="-40">down</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2,6,9</text>
+        </lyric></note>
     </measure>
     <measure number="2" width="191.875">
       <print new-system="no" new-page="no"/>
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="16.875">
+      <note color="#F46036" default-x="16.875">
         <pitch>
           <step>F</step>
           <octave>2</octave>
@@ -2376,7 +2517,11 @@
         <type>half</type>
         <stem default-y="-10">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2,9</text>
+        </lyric></note>
       <figured-bass>
         <figure>
           <figure-number>6</figure-number>
@@ -2392,7 +2537,7 @@
         </figure>
         <duration>4</duration>
       </figured-bass>
-      <note default-x="104.375">
+      <note color="#F46036" default-x="104.375">
         <pitch>
           <step>C</step>
           <octave>3</octave>
@@ -2402,14 +2547,18 @@
         <type>half</type>
         <stem default-y="7.5">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
     </measure>
     <measure number="3" width="191.875">
       <print new-system="no" new-page="no"/>
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="16.875">
+      <note color="#F46036" default-x="16.875">
         <pitch>
           <step>G</step>
           <octave>2</octave>
@@ -2419,7 +2568,11 @@
         <type>half</type>
         <stem default-y="-5">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
       <figured-bass>
         <figure>
           <figure-number>6</figure-number>
@@ -2435,7 +2588,7 @@
         </figure>
         <duration>4</duration>
       </figured-bass>
-      <note default-x="104.375">
+      <note color="#F46036" default-x="104.375">
         <pitch>
           <step>D</step>
           <octave>3</octave>
@@ -2445,7 +2598,11 @@
         <type>half</type>
         <stem default-y="11.25">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
     </measure>
     <measure number="4" width="213.125">
       <print new-system="no" new-page="no"/>
@@ -2459,7 +2616,7 @@
         </figure>
         <duration>8</duration>
       </figured-bass>
-      <note default-x="23.125">
+      <note color="#F46036" default-x="23.125">
         <pitch>
           <step>D</step>
           <octave>3</octave>
@@ -2469,8 +2626,12 @@
         <type>half</type>
         <stem default-y="11.25">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="110.625">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
+      <note color="#F46036" default-x="110.625">
         <pitch>
           <step>F</step>
           <alter>1</alter>
@@ -2482,7 +2643,11 @@
         <accidental>sharp</accidental>
         <stem default-y="-10">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
     </measure>
     <measure number="5" width="221.875">
       <print new-system="yes" new-page="no">
@@ -2500,7 +2665,7 @@
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="66.875">
+      <note color="#F46036" default-x="66.875">
         <pitch>
           <step>G</step>
           <octave>2</octave>
@@ -2510,8 +2675,12 @@
         <type>half</type>
         <stem default-y="-5">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="138.125">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
+      <note color="#F46036" default-x="138.125">
         <pitch>
           <step>G</step>
           <octave>3</octave>
@@ -2521,14 +2690,18 @@
         <type>half</type>
         <stem default-y="-40">down</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2,9</text>
+        </lyric></note>
     </measure>
     <measure number="6" width="159.375">
       <print new-system="no" new-page="no"/>
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="16.875">
+      <note color="#F46036" default-x="16.875">
         <pitch>
           <step>F</step>
           <octave>2</octave>
@@ -2538,7 +2711,11 @@
         <type>half</type>
         <stem default-y="-10">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2,9</text>
+        </lyric></note>
       <figured-bass>
         <figure>
           <figure-number>6</figure-number>
@@ -2548,7 +2725,7 @@
         </figure>
         <duration>8</duration>
       </figured-bass>
-      <note default-x="88.125">
+      <note color="#F46036" default-x="88.125">
         <pitch>
           <step>C</step>
           <octave>3</octave>
@@ -2558,14 +2735,18 @@
         <type>half</type>
         <stem default-y="7.5">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
     </measure>
     <measure number="7" width="219.375">
       <print new-system="no" new-page="no"/>
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="16.875">
+      <note color="#F46036" default-x="16.875">
         <pitch>
           <step>G</step>
           <octave>2</octave>
@@ -2575,14 +2756,18 @@
         <type>quarter</type>
         <stem default-y="-5">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
       <figured-bass>
         <figure>
           <figure-number>9</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
-      <note default-x="58.75">
+      <note color="#F46036" default-x="58.75">
         <pitch>
           <step>C</step>
           <octave>3</octave>
@@ -2592,7 +2777,11 @@
         <type>quarter</type>
         <stem default-y="7.5">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
       <figured-bass>
         <figure>
           <figure-number>7</figure-number>
@@ -2612,7 +2801,7 @@
         </figure>
         <duration>4</duration>
       </figured-bass>
-      <note default-x="118.125">
+      <note color="#D7263D" default-x="118.125">
         <pitch>
           <step>D</step>
           <octave>3</octave>
@@ -2622,7 +2811,11 @@
         <type>half</type>
         <stem default-y="11.25">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R1,2</text>
+        </lyric></note>
     </measure>
     <measure number="8" width="103.75">
       <print new-system="no" new-page="no"/>
@@ -2636,7 +2829,7 @@
         </figure>
         <duration>16</duration>
       </figured-bass>
-      <note default-x="20">
+      <note color="#D7263D" default-x="20">
         <pitch>
           <step>G</step>
           <octave>2</octave>
@@ -2645,7 +2838,11 @@
         <voice>1</voice>
         <type>whole</type>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R1,2</text>
+        </lyric></note>
       <barline location="right">
         <bar-style>light-heavy</bar-style>
         <repeat direction="backward"/>
@@ -2660,7 +2857,7 @@
         <bar-style>heavy-light</bar-style>
         <repeat direction="forward"/>
       </barline>
-      <note default-x="53.75">
+      <note color="#F46036" default-x="53.75">
         <pitch>
           <step>G</step>
           <octave>2</octave>
@@ -2670,8 +2867,12 @@
         <type>quarter</type>
         <stem default-y="-5">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="95.625">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
+      <note color="#F46036" default-x="95.625">
         <pitch>
           <step>G</step>
           <octave>3</octave>
@@ -2681,7 +2882,11 @@
         <type>half</type>
         <stem default-y="-40">down</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2,9</text>
+        </lyric></note>
       <figured-bass>
         <figure>
           <figure-number>6</figure-number>
@@ -2691,7 +2896,7 @@
         </figure>
         <duration>4</duration>
       </figured-bass>
-      <note default-x="196.875">
+      <note color="#F46036" default-x="196.875">
         <pitch>
           <step>D</step>
           <octave>3</octave>
@@ -2701,7 +2906,11 @@
         <type>quarter</type>
         <stem default-y="-51.25">down</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
     </measure>
     <measure number="10" width="276.25">
       <print new-page="yes">
@@ -2728,7 +2937,7 @@
         </figure>
         <duration>4</duration>
       </figured-bass>
-      <note default-x="66.875">
+      <note color="#F46036" default-x="66.875">
         <pitch>
           <step>F</step>
           <octave>2</octave>
@@ -2738,8 +2947,12 @@
         <type>quarter</type>
         <stem default-y="-10">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="133.75">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
+      <note color="#F46036" default-x="133.75">
         <pitch>
           <step>F</step>
           <octave>3</octave>
@@ -2749,14 +2962,18 @@
         <type>half</type>
         <stem default-y="-43.75">down</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2,9</text>
+        </lyric></note>
       <figured-bass>
         <figure>
           <figure-number>6</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
-      <note default-x="228.75">
+      <note color="#F46036" default-x="228.75">
         <pitch>
           <step>A</step>
           <octave>2</octave>
@@ -2766,14 +2983,18 @@
         <type>quarter</type>
         <stem default-y="-0">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
     </measure>
     <measure number="11" width="231.875">
       <print new-system="no" new-page="no"/>
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="16.875">
+      <note color="#F46036" default-x="16.875">
         <pitch>
           <step>G</step>
           <octave>2</octave>
@@ -2783,8 +3004,12 @@
         <type>quarter</type>
         <stem default-y="-5">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="64.375">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
+      <note color="#F46036" default-x="64.375">
         <pitch>
           <step>G</step>
           <octave>3</octave>
@@ -2794,7 +3019,11 @@
         <type>half</type>
         <stem default-y="-40">down</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2,3,9</text>
+        </lyric></note>
       <figured-bass>
         <figure>
           <figure-number>6</figure-number>
@@ -2804,7 +3033,7 @@
         </figure>
         <duration>4</duration>
       </figured-bass>
-      <note default-x="165">
+      <note color="#F46036" default-x="165">
         <pitch>
           <step>D</step>
           <octave>3</octave>
@@ -2814,7 +3043,11 @@
         <type>quarter</type>
         <stem default-y="-51.25">down</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2,3</text>
+        </lyric></note>
     </measure>
     <measure number="12" width="210">
       <print new-system="no" new-page="no"/>
@@ -2828,7 +3061,7 @@
         </figure>
         <duration>6</duration>
       </figured-bass>
-      <note default-x="23.125">
+      <note color="#F46036" default-x="23.125">
         <pitch>
           <step>D</step>
           <octave>3</octave>
@@ -2839,14 +3072,18 @@
         <dot/>
         <stem default-y="-51.25">down</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
       <figured-bass>
         <figure>
           <figure-number>9</figure-number>
         </figure>
         <duration>2</duration>
       </figured-bass>
-      <note default-x="81.25">
+      <note color="#F46036" default-x="81.25">
         <pitch>
           <step>C</step>
           <octave>3</octave>
@@ -2856,7 +3093,11 @@
         <type>eighth</type>
         <stem default-y="10">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
       <figured-bass>
         <figure>
           <figure-number>7</figure-number>
@@ -2867,7 +3108,7 @@
         </figure>
         <duration>4</duration>
       </figured-bass>
-      <note default-x="115">
+      <note color="#F46036" default-x="115">
         <pitch>
           <step>B</step>
           <alter>-1</alter>
@@ -2878,14 +3119,18 @@
         <type>quarter</type>
         <stem default-y="3.75">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
       <figured-bass>
         <figure>
           <figure-number>4</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
-      <note default-x="162.5">
+      <note color="#F46036" default-x="162.5">
         <pitch>
           <step>A</step>
           <octave>2</octave>
@@ -2895,14 +3140,18 @@
         <type>quarter</type>
         <stem default-y="-0">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
     </measure>
     <measure number="13" width="226.875">
       <print new-system="no" new-page="no"/>
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="16.875">
+      <note color="#F46036" default-x="16.875">
         <pitch>
           <step>G</step>
           <octave>2</octave>
@@ -2912,7 +3161,11 @@
         <type>quarter</type>
         <stem default-y="-5">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
       <figured-bass>
         <figure>
           <figure-number>4</figure-number>
@@ -2928,7 +3181,7 @@
         </figure>
         <duration>4</duration>
       </figured-bass>
-      <note default-x="64.375">
+      <note color="#F46036" default-x="64.375">
         <pitch>
           <step>D</step>
           <octave>3</octave>
@@ -2938,7 +3191,11 @@
         <type>half</type>
         <stem default-y="11.25">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
       <figured-bass>
         <figure>
           <figure-number>6</figure-number>
@@ -2948,7 +3205,7 @@
         </figure>
         <duration>4</duration>
       </figured-bass>
-      <note default-x="179.375">
+      <note color="#F46036" default-x="179.375">
         <pitch>
           <step>D</step>
           <octave>3</octave>
@@ -2958,7 +3215,11 @@
         <type>quarter</type>
         <stem default-y="11.25">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
     </measure>
     <measure number="14" width="395.625">
       <print new-system="yes" new-page="no">
@@ -2985,7 +3246,7 @@
         </figure>
         <duration>4</duration>
       </figured-bass>
-      <note default-x="66.875">
+      <note color="#F46036" default-x="66.875">
         <pitch>
           <step>F</step>
           <octave>2</octave>
@@ -2995,8 +3256,12 @@
         <type>quarter</type>
         <stem default-y="-10">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="171.875">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
+      <note color="#F46036" default-x="171.875">
         <pitch>
           <step>F</step>
           <octave>3</octave>
@@ -3006,14 +3271,18 @@
         <type>half</type>
         <stem default-y="-43.75">down</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2,5,9</text>
+        </lyric></note>
       <figured-bass>
         <figure>
           <figure-number>6</figure-number>
         </figure>
         <duration>4</duration>
       </figured-bass>
-      <note default-x="321.25">
+      <note color="#F46036" default-x="321.25">
         <pitch>
           <step>A</step>
           <octave>2</octave>
@@ -3023,14 +3292,18 @@
         <type>quarter</type>
         <stem default-y="-0">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
     </measure>
     <measure number="15" width="361.25">
       <print new-system="no" new-page="no"/>
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="16.875">
+      <note color="#F46036" default-x="16.875">
         <pitch>
           <step>G</step>
           <octave>2</octave>
@@ -3040,7 +3313,11 @@
         <type>quarter</type>
         <stem default-y="-5">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
       <figured-bass>
         <figure>
           <figure-number>7</figure-number>
@@ -3050,7 +3327,7 @@
         </figure>
         <duration>4</duration>
       </figured-bass>
-      <note default-x="91.25">
+      <note color="#D7263D" default-x="91.25">
         <pitch>
           <step>C</step>
           <octave>3</octave>
@@ -3060,7 +3337,11 @@
         <type>quarter</type>
         <stem default-y="7.5">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R1,2</text>
+        </lyric></note>
       <figured-bass>
         <figure>
           <prefix>sharp</prefix>
@@ -3068,7 +3349,7 @@
         </figure>
         <duration>8</duration>
       </figured-bass>
-      <note default-x="181.25">
+      <note color="#D7263D" default-x="181.25">
         <pitch>
           <step>D</step>
           <octave>3</octave>
@@ -3078,7 +3359,11 @@
         <type>half</type>
         <stem default-y="11.25">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R1,2</text>
+        </lyric></note>
     </measure>
     <measure number="16" width="168.75">
       <print new-system="no" new-page="no"/>
@@ -3092,7 +3377,7 @@
         </figure>
         <duration>16</duration>
       </figured-bass>
-      <note default-x="20">
+      <note color="#D7263D" default-x="20">
         <pitch>
           <step>G</step>
           <octave>2</octave>
@@ -3101,7 +3386,11 @@
         <voice>1</voice>
         <type>whole</type>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R1,2</text>
+        </lyric></note>
       <barline location="right">
         <bar-style>light-heavy</bar-style>
         <repeat direction="backward"/>
@@ -3138,7 +3427,7 @@
           <line>4</line>
         </clef>
       </attributes>
-      <note default-x="93.75">
+      <note color="#F46036" default-x="93.75">
         <pitch>
           <step>G</step>
           <octave>2</octave>
@@ -3148,8 +3437,12 @@
         <type>half</type>
         <stem default-y="-5">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="181.25">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
+      <note color="#F46036" default-x="181.25">
         <pitch>
           <step>G</step>
           <octave>3</octave>
@@ -3159,14 +3452,18 @@
         <type>half</type>
         <stem default-y="-40">down</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2,9</text>
+        </lyric></note>
     </measure>
     <measure number="2" width="191.875">
       <print new-system="no" new-page="no"/>
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="16.875">
+      <note color="#F46036" default-x="16.875">
         <pitch>
           <step>F</step>
           <octave>2</octave>
@@ -3176,8 +3473,12 @@
         <type>half</type>
         <stem default-y="-10">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="104.375">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2,9</text>
+        </lyric></note>
+      <note color="#F46036" default-x="104.375">
         <pitch>
           <step>C</step>
           <octave>3</octave>
@@ -3187,19 +3488,15 @@
         <type>half</type>
         <stem default-y="7.5">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
       <backup>
         <duration>8</duration>
       </backup>
-      <figured-bass>
-        <figure>
-          <figure-number>6</figure-number>
-        </figure>
-        <figure>
-          <figure-number>4</figure-number>
-        </figure>
-      </figured-bass>
-      <forward>
+<forward>
         <duration>8</duration>
       </forward>
     </measure>
@@ -3208,7 +3505,7 @@
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="16.875">
+      <note color="#F46036" default-x="16.875">
         <pitch>
           <step>G</step>
           <octave>2</octave>
@@ -3218,8 +3515,12 @@
         <type>half</type>
         <stem default-y="-5">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="104.375">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
+      <note color="#F46036" default-x="104.375">
         <pitch>
           <step>D</step>
           <octave>3</octave>
@@ -3229,19 +3530,15 @@
         <type>half</type>
         <stem default-y="11.25">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
       <backup>
         <duration>8</duration>
       </backup>
-      <figured-bass>
-        <figure>
-          <figure-number>6</figure-number>
-        </figure>
-        <figure>
-          <figure-number>4</figure-number>
-        </figure>
-      </figured-bass>
-      <forward>
+<forward>
         <duration>8</duration>
       </forward>
     </measure>
@@ -3250,7 +3547,7 @@
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="23.125">
+      <note color="#F46036" default-x="23.125">
         <pitch>
           <step>D</step>
           <octave>3</octave>
@@ -3260,8 +3557,12 @@
         <type>half</type>
         <stem default-y="11.25">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="110.625">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
+      <note color="#F46036" default-x="110.625">
         <pitch>
           <step>F</step>
           <alter>1</alter>
@@ -3273,16 +3574,15 @@
         <accidental>sharp</accidental>
         <stem default-y="-10">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
       <backup>
         <duration>8</duration>
       </backup>
-      <figured-bass>
-        <figure>
-          <figure-number>6</figure-number>
-        </figure>
-      </figured-bass>
-      <forward>
+<forward>
         <duration>8</duration>
       </forward>
     </measure>
@@ -3302,7 +3602,7 @@
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="66.875">
+      <note color="#F46036" default-x="66.875">
         <pitch>
           <step>G</step>
           <octave>2</octave>
@@ -3312,8 +3612,12 @@
         <type>half</type>
         <stem default-y="-5">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="138.125">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
+      <note color="#F46036" default-x="138.125">
         <pitch>
           <step>G</step>
           <octave>3</octave>
@@ -3323,14 +3627,18 @@
         <type>half</type>
         <stem default-y="-40">down</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2,9</text>
+        </lyric></note>
     </measure>
     <measure number="6" width="159.375">
       <print new-system="no" new-page="no"/>
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="16.875">
+      <note color="#F46036" default-x="16.875">
         <pitch>
           <step>F</step>
           <octave>2</octave>
@@ -3340,8 +3648,12 @@
         <type>half</type>
         <stem default-y="-10">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="88.125">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2,9</text>
+        </lyric></note>
+      <note color="#F46036" default-x="88.125">
         <pitch>
           <step>C</step>
           <octave>3</octave>
@@ -3351,19 +3663,15 @@
         <type>half</type>
         <stem default-y="7.5">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
       <backup>
         <duration>8</duration>
       </backup>
-      <figured-bass>
-        <figure>
-          <figure-number>6</figure-number>
-        </figure>
-        <figure>
-          <figure-number>4</figure-number>
-        </figure>
-      </figured-bass>
-      <forward>
+<forward>
         <duration>8</duration>
       </forward>
     </measure>
@@ -3372,7 +3680,7 @@
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="16.875">
+      <note color="#F46036" default-x="16.875">
         <pitch>
           <step>G</step>
           <octave>2</octave>
@@ -3382,8 +3690,12 @@
         <type>quarter</type>
         <stem default-y="-5">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="58.75">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
+      <note color="#F46036" default-x="58.75">
         <pitch>
           <step>C</step>
           <octave>3</octave>
@@ -3393,8 +3705,12 @@
         <type>quarter</type>
         <stem default-y="7.5">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="118.125">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
+      <note color="#D7263D" default-x="118.125">
         <pitch>
           <step>D</step>
           <octave>3</octave>
@@ -3404,16 +3720,15 @@
         <type>half</type>
         <stem default-y="11.25">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R1,2</text>
+        </lyric></note>
       <backup>
         <duration>8</duration>
       </backup>
-      <figured-bass>
-        <figure>
-          <prefix>sharp</prefix>
-        </figure>
-      </figured-bass>
-      <forward>
+<forward>
         <duration>8</duration>
       </forward>
     </measure>
@@ -3422,7 +3737,7 @@
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="20">
+      <note color="#D7263D" default-x="20">
         <pitch>
           <step>G</step>
           <octave>2</octave>
@@ -3431,7 +3746,11 @@
         <voice>1</voice>
         <type>whole</type>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R1,2</text>
+        </lyric></note>
       <barline location="right">
         <bar-style>light-heavy</bar-style>
         <repeat direction="backward"/>
@@ -3446,7 +3765,7 @@
         <bar-style>heavy-light</bar-style>
         <repeat direction="forward"/>
       </barline>
-      <note default-x="53.75">
+      <note color="#F46036" default-x="53.75">
         <pitch>
           <step>G</step>
           <octave>2</octave>
@@ -3456,8 +3775,12 @@
         <type>quarter</type>
         <stem default-y="-5">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="95.625">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
+      <note color="#F46036" default-x="95.625">
         <pitch>
           <step>G</step>
           <octave>3</octave>
@@ -3467,8 +3790,12 @@
         <type>half</type>
         <stem default-y="-40">down</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="196.875">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2,9</text>
+        </lyric></note>
+      <note color="#F46036" default-x="196.875">
         <pitch>
           <step>D</step>
           <octave>3</octave>
@@ -3478,19 +3805,15 @@
         <type>quarter</type>
         <stem default-y="-51.25">down</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
       <backup>
         <duration>4</duration>
       </backup>
-      <figured-bass>
-        <figure>
-          <figure-number>6</figure-number>
-        </figure>
-        <figure>
-          <figure-number>4</figure-number>
-        </figure>
-      </figured-bass>
-      <forward>
+<forward>
         <duration>4</duration>
       </forward>
     </measure>
@@ -3510,7 +3833,7 @@
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="66.875">
+      <note color="#F46036" default-x="66.875">
         <pitch>
           <step>F</step>
           <octave>2</octave>
@@ -3520,8 +3843,12 @@
         <type>quarter</type>
         <stem default-y="-10">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="133.75">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
+      <note color="#F46036" default-x="133.75">
         <pitch>
           <step>F</step>
           <octave>3</octave>
@@ -3531,8 +3858,12 @@
         <type>half</type>
         <stem default-y="-43.75">down</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="228.75">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2,9</text>
+        </lyric></note>
+      <note color="#F46036" default-x="228.75">
         <pitch>
           <step>A</step>
           <octave>2</octave>
@@ -3542,16 +3873,15 @@
         <type>quarter</type>
         <stem default-y="-0">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
       <backup>
         <duration>4</duration>
       </backup>
-      <figured-bass>
-        <figure>
-          <figure-number>6</figure-number>
-        </figure>
-      </figured-bass>
-      <forward>
+<forward>
         <duration>4</duration>
       </forward>
     </measure>
@@ -3560,7 +3890,7 @@
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="16.875">
+      <note color="#F46036" default-x="16.875">
         <pitch>
           <step>G</step>
           <octave>2</octave>
@@ -3570,8 +3900,12 @@
         <type>quarter</type>
         <stem default-y="-5">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="64.375">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
+      <note color="#F46036" default-x="64.375">
         <pitch>
           <step>G</step>
           <octave>3</octave>
@@ -3581,8 +3915,12 @@
         <type>half</type>
         <stem default-y="-40">down</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="165">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2,9</text>
+        </lyric></note>
+      <note color="#F46036" default-x="165">
         <pitch>
           <step>D</step>
           <octave>3</octave>
@@ -3592,19 +3930,15 @@
         <type>quarter</type>
         <stem default-y="-51.25">down</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
       <backup>
         <duration>4</duration>
       </backup>
-      <figured-bass>
-        <figure>
-          <figure-number>6</figure-number>
-        </figure>
-        <figure>
-          <figure-number>4</figure-number>
-        </figure>
-      </figured-bass>
-      <forward>
+<forward>
         <duration>4</duration>
       </forward>
     </measure>
@@ -3613,7 +3947,7 @@
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="23.125">
+      <note color="#F46036" default-x="23.125">
         <pitch>
           <step>D</step>
           <octave>3</octave>
@@ -3624,8 +3958,12 @@
         <dot/>
         <stem default-y="-51.25">down</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="81.25">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
+      <note color="#F46036" default-x="81.25">
         <pitch>
           <step>C</step>
           <octave>3</octave>
@@ -3635,19 +3973,18 @@
         <type>eighth</type>
         <stem default-y="10">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
       <backup>
         <duration>2</duration>
       </backup>
-      <figured-bass>
-        <figure>
-          <figure-number>7</figure-number>
-        </figure>
-      </figured-bass>
-      <forward>
+<forward>
         <duration>2</duration>
       </forward>
-      <note default-x="115">
+      <note color="#F46036" default-x="115">
         <pitch>
           <step>B</step>
           <alter>-1</alter>
@@ -3658,8 +3995,12 @@
         <type>quarter</type>
         <stem default-y="3.75">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="162.5">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
+      <note color="#F46036" default-x="162.5">
         <pitch>
           <step>A</step>
           <octave>2</octave>
@@ -3669,19 +4010,15 @@
         <type>quarter</type>
         <stem default-y="-0">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
       <backup>
         <duration>4</duration>
       </backup>
-      <figured-bass>
-        <figure>
-          <figure-number>6</figure-number>
-        </figure>
-        <figure>
-          <figure-number>4</figure-number>
-        </figure>
-      </figured-bass>
-      <forward>
+<forward>
         <duration>4</duration>
       </forward>
     </measure>
@@ -3690,7 +4027,7 @@
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="16.875">
+      <note color="#F46036" default-x="16.875">
         <pitch>
           <step>G</step>
           <octave>2</octave>
@@ -3700,8 +4037,12 @@
         <type>quarter</type>
         <stem default-y="-5">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="64.375">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
+      <note color="#F46036" default-x="64.375">
         <pitch>
           <step>D</step>
           <octave>3</octave>
@@ -3711,22 +4052,18 @@
         <type>half</type>
         <stem default-y="11.25">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
       <backup>
         <duration>8</duration>
       </backup>
-      <figured-bass>
-        <figure>
-          <figure-number>6</figure-number>
-        </figure>
-        <figure>
-          <figure-number>4</figure-number>
-        </figure>
-      </figured-bass>
-      <forward>
+<forward>
         <duration>8</duration>
       </forward>
-      <note default-x="179.375">
+      <note color="#F46036" default-x="179.375">
         <pitch>
           <step>D</step>
           <octave>3</octave>
@@ -3736,19 +4073,15 @@
         <type>quarter</type>
         <stem default-y="11.25">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
       <backup>
         <duration>4</duration>
       </backup>
-      <figured-bass>
-        <figure>
-          <figure-number>6</figure-number>
-        </figure>
-        <figure>
-          <figure-number>4</figure-number>
-        </figure>
-      </figured-bass>
-      <forward>
+<forward>
         <duration>4</duration>
       </forward>
     </measure>
@@ -3768,7 +4101,7 @@
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="66.875">
+      <note color="#F46036" default-x="66.875">
         <pitch>
           <step>F</step>
           <octave>2</octave>
@@ -3778,8 +4111,12 @@
         <type>quarter</type>
         <stem default-y="-10">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="171.875">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
+      <note color="#F46036" default-x="171.875">
         <pitch>
           <step>F</step>
           <octave>3</octave>
@@ -3789,8 +4126,12 @@
         <type>half</type>
         <stem default-y="-43.75">down</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="321.25">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2,9</text>
+        </lyric></note>
+      <note color="#F46036" default-x="321.25">
         <pitch>
           <step>A</step>
           <octave>2</octave>
@@ -3800,16 +4141,15 @@
         <type>quarter</type>
         <stem default-y="-0">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
       <backup>
         <duration>4</duration>
       </backup>
-      <figured-bass>
-        <figure>
-          <figure-number>6</figure-number>
-        </figure>
-      </figured-bass>
-      <forward>
+<forward>
         <duration>4</duration>
       </forward>
     </measure>
@@ -3818,7 +4158,7 @@
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="16.875">
+      <note color="#F46036" default-x="16.875">
         <pitch>
           <step>G</step>
           <octave>2</octave>
@@ -3828,8 +4168,12 @@
         <type>quarter</type>
         <stem default-y="-5">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="91.25">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R2</text>
+        </lyric></note>
+      <note color="#D7263D" default-x="91.25">
         <pitch>
           <step>C</step>
           <octave>3</octave>
@@ -3839,8 +4183,12 @@
         <type>quarter</type>
         <stem default-y="7.5">up</stem>
         <staff>1</staff>
-      </note>
-      <note default-x="181.25">
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R1,2</text>
+        </lyric></note>
+      <note color="#D7263D" default-x="181.25">
         <pitch>
           <step>D</step>
           <octave>3</octave>
@@ -3850,16 +4198,15 @@
         <type>half</type>
         <stem default-y="11.25">up</stem>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R1,2</text>
+        </lyric></note>
       <backup>
         <duration>8</duration>
       </backup>
-      <figured-bass>
-        <figure>
-          <prefix>sharp</prefix>
-        </figure>
-      </figured-bass>
-      <forward>
+<forward>
         <duration>8</duration>
       </forward>
     </measure>
@@ -3868,7 +4215,7 @@
       <attributes>
         <divisions>4</divisions>
       </attributes>
-      <note default-x="20">
+      <note color="#D7263D" default-x="20">
         <pitch>
           <step>G</step>
           <octave>2</octave>
@@ -3877,20 +4224,15 @@
         <voice>1</voice>
         <type>whole</type>
         <staff>1</staff>
-      </note>
+      
+        <lyric number="99">
+          <syllabic>single</syllabic>
+          <text>R1,2</text>
+        </lyric></note>
       <backup>
         <duration>16</duration>
       </backup>
-      <figured-bass>
-        <figure>
-          <prefix>sharp</prefix>
-          <figure-number>5</figure-number>
-        </figure>
-        <figure>
-          <prefix>sharp</prefix>
-        </figure>
-      </figured-bass>
-      <forward>
+<forward>
         <duration>16</duration>
       </forward>
       <barline location="right">
