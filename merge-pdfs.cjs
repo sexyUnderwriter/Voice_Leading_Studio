@@ -8,7 +8,7 @@ const textToPdf = (textFilePath, pdfPath) => {
       const text = fs.readFileSync(textFilePath, 'utf-8');
       const writeStream = fs.createWriteStream(pdfPath);
       const doc = new PDFDocument({
-        margin: 50,
+        margin: 40,
         size: 'Letter'
       });
 
@@ -16,16 +16,34 @@ const textToPdf = (textFilePath, pdfPath) => {
       doc.on('error', reject);
 
       doc.pipe(writeStream);
-      doc.font('Courier', 10);
       
-      // Split into lines and add to PDF
+      // Split into lines and add to PDF with proper formatting
       const lines = text.split('\n');
-      lines.forEach(line => {
-        // Wrap long lines
-        if (line.length > 80) {
-          doc.text(line, { width: 500, wrap: true });
-        } else {
+      lines.forEach((line, idx) => {
+        // Detect headings (lines with === or --- underlines, or numbered rules)
+        const nextLine = idx + 1 < lines.length ? lines[idx + 1] : '';
+        const isHeading = nextLine && (nextLine.match(/^=+$/) || nextLine.match(/^-+$/));
+        const isNumberedRule = line.match(/^\d+\)/);
+        
+        if (isHeading) {
+          // This is a heading - use bold Helvetica
+          doc.font('Helvetica-Bold', 11);
           doc.text(line);
+        } else if (isNumberedRule) {
+          // Numbered rules - bold font
+          doc.font('Helvetica-Bold', 10);
+          doc.text(line);
+        } else if (line.match(/^-+$/) || line.match(/^=+$/)) {
+          // Skip underline lines
+          return;
+        } else {
+          // Regular text - normal Helvetica
+          doc.font('Helvetica', 9);
+          if (line.length > 85) {
+            doc.text(line, { width: 480, wrap: true });
+          } else {
+            doc.text(line);
+          }
         }
       });
 

@@ -2078,10 +2078,13 @@ function buildLegendDirectionsXml(entries: ColorLegendEntry[]): string {
   const lines: string[] = [];
   const titleY = 102;
   const gridStartY = 84;
-  const rowHeight = 16;
-  const columns = 3;
-  const colWidth = 520;
+  const rowHeight = 12;
+  const columns = 1;
+  const colWidth = 0;
   const gridStartX = 18;
+
+  // Sort entries by rule number
+  const sortedEntries = [...entries].sort((a, b) => getRuleNumber(a.rule) - getRuleNumber(b.rule));
 
   lines.push(
     "    <direction placement=\"above\">\n" +
@@ -2091,8 +2094,8 @@ function buildLegendDirectionsXml(entries: ColorLegendEntry[]): string {
       "    </direction>\n",
   );
 
-  for (let i = 0; i < entries.length; i += 1) {
-    const entry = entries[i];
+  for (let i = 0; i < sortedEntries.length; i += 1) {
+    const entry = sortedEntries[i];
     const n = getRuleNumber(entry.rule);
     const col = i % columns;
     const row = Math.floor(i / columns);
@@ -2102,7 +2105,7 @@ function buildLegendDirectionsXml(entries: ColorLegendEntry[]): string {
     lines.push(
       "    <direction placement=\"above\">\n" +
         "      <direction-type>\n" +
-        `        <words default-x=\"${x}\" default-y=\"${y}\" relative-x=\"${x}\" color=\"${entry.color}\" font-weight=\"bold\" enclosure=\"rectangle\">${n}. [${colorNameFromHex(entry.color)}] ${entry.rule}</words>\n` +
+        `        <words default-x=\"${x}\" default-y=\"${y}\" color=\"${entry.color}\" font-weight=\"bold\" enclosure=\"rectangle\">${n}. [${colorNameFromHex(entry.color)}] ${entry.rule}</words>\n` +
         "      </direction-type>\n" +
         "    </direction>\n",
     );

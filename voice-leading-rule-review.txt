@@ -1,195 +1,341 @@
-Voice-Leading Rule Review and Correction Guide
-=============================================
+VOICE-LEADING RULE REVIEW AND CORRECTION GUIDE
+===============================================
 
-Source analyzed:
-Prelude and Fugue for Recorders in G - Full score - 01 Fugue.musicxml
+Score: Prelude and Fugue for Recorders in G - Full score - 01 Fugue.musicxml
 
-Summary from current report:
-- Total flags: 205
-- Leading tone unresolved: 33
-- Voice crossing: 20
-- Parallel unisons: 107
-- Parallel octaves: 13
-- Parallel P5ths: 17
-- Large leap: 11
-- Melodic tritone: 2
-- Direct 5ths: 2
-
-Important context:
-Many flags mention Viola. If you intend to work with the reduced 4-recorder version only,
-re-run analysis after removing Viola so counts and examples match the current score exactly.
-
-
-1) Leading Tone Unresolved (33)
--------------------------------
-Why this rule is flagged:
-- In tonal counterpoint, the leading tone (scale degree 7) has strong tendency to resolve up by semitone to tonic.
-- In G major, that means F# is expected to move to G in accented or cadential contexts.
-- The analyzer flags cases where F# holds, descends, or leaps elsewhere instead of resolving to G.
-
-Representative report examples:
-- m.4 beat 1.00 (Alto): F# -> E
-- m.7 beat 2.50 (Soprano): F# -> A
-- m.21 beat 4.00 (Alto): F# -> C#
-
-Why these may be musical anyway:
-- In fugue texture, passing, neighbor, or sequence-driven lines may defer or avoid immediate tendency-tone resolution.
-- Inner voices can sometimes move to chordal tones other than tonic if harmony is clear and voice leading remains smooth.
-
-Correction options:
-- Preferred: move F# to G in the next note in the same voice, especially at cadences and downbeats.
-- If harmonic function requires otherwise, delay but eventually complete the tendency resolution by step.
-- Revoice surrounding parts so F# becomes non-structural (passing tone) with weaker accent.
-
-
-2) Voice Crossing (20)
-----------------------
-Why this rule is flagged:
-- A lower voice moves above a higher voice (or vice versa), blurring registral hierarchy.
-- The revised detector already ignores unison landings and direct pitch swaps, so these are more likely true crossings.
-
-Representative report examples:
-- m.9 beat 1.00: Soprano crosses Alto; Alto crosses Tenor
-- m.16 beat 2.00: Alto crosses Tenor
-- m.38 beat 1.00: Alto crosses Tenor
-
-Why these may be musical anyway:
-- Imitative writing can tolerate brief crossings when subjects overlap.
-- Some crossings are texturally intentional for color or registral exchange.
-
-Correction options:
-- Keep each line within its normal register envelope (S > A > T > B).
-- When two voices converge, route one by contrary step while the other holds or moves less.
-- Re-octavate one note in the inner voice to restore vertical order without changing harmony.
-
-
-3) Parallel Unisons (107)
--------------------------
-Why this rule is flagged:
-- Two voices move together in repeated unisons over successive attacks (unison -> unison).
-- This merges lines and reduces contrapuntal independence.
-
-Representative report examples:
-- m.6 beat 2.00: Soprano & Tenor unison -> unison
-- Many sustained chains in Bass & Viola through middle sections
-
-Why these may be musical anyway:
-- If one line is a reinforcement doubling (especially in arrangements), repeated unisons can be deliberate.
-- With Viola removed, many of these may disappear in the practical version.
-
-Correction options:
-- Convert one member of the pair to thirds, sixths, or oblique motion.
-- Keep occasional unison arrivals but avoid repeated consecutive unison motion.
-- Offset one voice rhythmically by suspending or anticipating its next pitch.
-
-
-4) Parallel Octaves (13)
-------------------------
-Why this rule is flagged:
-- Two voices form a perfect octave on one attack and another perfect octave on the next while moving in similar motion.
-- This weakens perceived independence similarly to parallel unisons.
-
-Representative report examples:
-- m.7 beat 3.00: Soprano & Bass (and Soprano & Viola)
-- m.21 beat 1.00: Alto & Bass (and Alto & Viola)
-
-Why these may be musical anyway:
-- In thicker ensemble textures, occasional octave reinforcement can be stylistically tolerated.
-- But repeated structural octaves are generally treated as an error in strict species-style counterpoint.
-
-Correction options:
-- Alter one voice by step to arrive at 10th/6th instead of 8ve.
-- Use contrary motion into the second sonority.
-- Reassign one voice note to neighboring chord tone.
-
-
-5) Parallel Perfect Fifths (17)
--------------------------------
-Why this rule is flagged:
-- Consecutive perfect fifths in similar motion between two parts.
-- In strict common-practice pedagogy, this is one of the primary independence violations.
-
-Representative report examples:
-- m.11 beat 3.00: Soprano & Tenor
-- m.21 beat 2.00: Soprano & Bass (and with Viola)
-- m.32 beat 2.00: Alto & Bass
-
-Why these may be musical anyway:
-- In sequential passages, temporary fifth chains may arise from pattern transposition.
-- Still usually worth reducing if you want stricter pedagogical compliance.
-
-Correction options:
-- Change one target note by step to produce a 6th/3rd at the second sonority.
-- Introduce contrary or oblique motion in one voice between the two chords.
-- Break sequence literalism for one event to avoid the repeated perfect interval.
-
-
-6) Large Leap (11)
+SUMMARY STATISTICS
 ------------------
-Why this rule is flagged:
-- Melodic leaps of 10+ semitones (minor seventh or larger), including octave-plus motions.
-- Large skips are harder to sing and often demand compensating stepwise recovery.
+Total violations analyzed: 75
 
-Representative report examples:
-- m.30 beat 1.00 (Alto): leap of 14 semitones
-- m.32 beat 1.00 (Bass): leap of 14 semitones
+Violation counts (by rule number as displayed in PDF legend):
+  • Rule 1 - Parallel P5ths: 8
+  • Rule 2 - Parallel octaves: 10
+  • Rule 3 - Parallel unisons: 1
+  • Rule 4 - Direct octaves: 0
+  • Rule 5 - Direct 5ths: 0
+  • Rule 6 - Voice crossing: 26
+  • Rule 7 - Augmented 2nd: 0
+  • Rule 8 - Melodic tritone: 1
+  • Rule 9 - Large leap: 8
+  • Rule 10 - Leading tone unresolved: 21
 
-Why these may be musical anyway:
-- Instrumental fugues can support larger leaps than vocal writing.
-- Octave transfers can be expressive if balanced by contour and phrase design.
+================================================================================
 
-Correction options:
-- Replace large leap with two smaller intervals via passing notes.
-- If keeping the leap, follow with stepwise motion opposite the leap direction.
-- Redistribute octave transfer to another voice where tessitura is more natural.
+RULE 1: PARALLEL PERFECT FIFTHS (8 violations)
+===============================================
 
+THE RULE:
+Two voices in similar motion should not move consecutively from one perfect fifth to another.
 
-7) Melodic Tritone (2)
-----------------------
-Why this rule is flagged:
-- A single voice leaps by tritone (augmented 4th/diminished 5th), often considered harsh in strict melodic writing.
+WHY IT MATTERS:
+- Parallel perfect intervals undermine voice independence by making two lines sound as one unit.
+- This is the most fundamental voice-leading prohibition in baroque counterpoint.
+- Avoiding parallels ensures each voice maintains its own identity and contour.
 
-Representative report examples:
-- m.16 beat 1.50: Bass (and Viola in full-score analysis) C# -> G
+WHEN FLAGGED:
+The analyzer detects both voices moving in the same direction into P5 → P5.
 
-Why these may be musical anyway:
-- In harmonic minor/sequence contexts, tritone outlines can occur idiomatically in instrumental lines.
+EXAMPLES FROM THIS SCORE:
+- m.4 beat 2: Soprano & Alto: B-E → A-D
+- m.11 beat 3: Soprano & Tenor: A-D → G-C
+- m.32 beat 2: Alto & Bass: A-D → B-E
 
-Correction options:
-- Fill the span with passing motion instead of direct leap.
-- Redirect one endpoint to nearest chord tone producing a perfect 4th/5th or major/minor 3rd.
-- Keep harmonic target but adjust rhythm to approach/leave by step.
+WHY IT MAY STILL BE MUSICAL:
+- Sequential patterns sometimes generate parallel fifths as a stylistic choice.
+- In fast-moving passages, brief parallels may be less noticeable.
+- Instrumental ensembles tolerate parallels better than vocal writing.
 
+CORRECTION OPTIONS (prioritized):
+  1. BEST: Change one arriving note by step to produce a 6th or 3rd instead.
+  2. Introduce contrary or oblique motion in one voice between the two chords.
+  3. Break the sequence for one event to avoid the parallel.
 
-8) Direct (Hidden) Fifths (2)
------------------------------
-Why this rule is flagged:
-- Outer voices move in similar motion into a perfect fifth, with upper voice leaping.
-- This can mimic the effect of parallels even without literal consecutive perfect intervals.
+================================================================================
 
-Representative report examples:
-- m.16 beat 2.00: Alto & Bass (outer-voice interpretation in current indexing)
-- m.32 beat 1.50: Alto & Bass
+RULE 2: PARALLEL OCTAVES (10 violations)
+=========================================
 
-Why these may be musical anyway:
-- In fast contrapuntal textures, some hidden perfects are acceptable if weakly accented and linearly justified.
+THE RULE:
+Two voices in similar motion should not move consecutively from one perfect octave to another.
 
-Correction options:
-- Change upper voice approach to stepwise motion.
-- Approach target by contrary motion in one outer voice.
-- Shift one note to a non-perfect interval at arrival.
+WHY IT MATTERS:
+- Parallel octaves eliminate all harmonic distinction between two voices.
+- They sound like a single doubling rather than two independent lines.
+- This is second only to parallel fifths in severity of voice-leading violation.
 
+WHEN FLAGGED:
+The analyzer detects both voices moving in the same direction into P8 → P8.
 
-Recommended workflow to fix efficiently
----------------------------------------
-1. Prioritize structural errors first: Parallel P5ths, Parallel Octaves, Direct 5ths.
-2. Next clean tendency-tone handling at cadences: Leading tone unresolved.
-3. Then smooth local line shape: Large leaps and Melodic tritones.
-4. Treat Parallel unisons and Voice crossings with musical discretion in imitative passages.
+EXAMPLES FROM THIS SCORE:
+- m.6 beat 2: Soprano & Tenor: A-A → G-G
+- m.7 beat 3: Soprano & Bass: A-A → G-G
+- m.21 beat 1: Alto & Bass: G-G → A-A
 
-5-minute triage pass:
-- Focus measures: 7, 9, 16, 21, 32.
-- In each, first remove repeated perfect intervals in outer parts.
-- Then ensure any accented F# resolves to G unless intentionally sequenced.
+WHY IT MAY STILL BE MUSICAL:
+- In ensemble doubling (especially reinforcement of outer voices), parallel octaves are accepted.
+- Thicker textures can support more parallel motion than sparse counterpoint.
+- But in pedagogical writing, they should be avoided.
+
+CORRECTION OPTIONS (prioritized):
+  1. BEST: Alter one voice to arrive at a 10th or 6th instead of an octave.
+  2. Use contrary motion in one outer voice into the second sonority.
+  3. Reassign one note to a nearby chord tone that avoids the octave.
+
+================================================================================
+
+RULE 3: PARALLEL UNISONS (1 violation)
+======================================
+
+THE RULE:
+Two voices should not arrive on unison multiple consecutive times.
+
+WHY IT MATTERS:
+- Repeated unison motion merges lines completely and destroys voice independence.
+- While unison arrivals can occur occasionally, sustained unison motion is poor counterpoint.
+- This is less common in well-written baroque music than in arrangements or reductions.
+
+WHEN FLAGGED:
+The analyzer detects both voices arriving on the same pitch in consecutive measures/attacks.
+
+EXAMPLES FROM THIS SCORE:
+- m.25 beat 1: Alto & Bass unison on A
+
+WHY IT MAY STILL BE MUSICAL:
+- In arrangements, deliberate doubling at the unison can be a stylistic choice.
+- With certain voices removed from the full score, unison chains may be incidental.
+- A single unison arrival is not a violation; repeated unison motion is.
+
+CORRECTION OPTIONS (prioritized):
+  1. Convert one member of the pair to a 3rd, 6th, or other consonance.
+  2. Keep occasional unison arrivals but avoid repeated consecutive motion.
+  3. Offset one voice rhythmically (suspension, anticipation) to break the chain.
+
+================================================================================
+
+RULE 4: DIRECT OCTAVES (0 violations)
+=====================================
+
+THE RULE:
+Outer voices should not move in similar motion into a perfect octave with an upward leap in the soprano.
+
+WHY IT MATTERS:
+- Direct fifths/octaves (also called "hidden" intervals) create the effect of parallel motion
+  even without consecutive perfect intervals.
+- In outer voices especially, this weakens the independence and clarity of the counterpoint.
+- Avoiding them strengthens voice leading in strict species counterpoint.
+
+WHEN FLAGGED:
+The analyzer detects similar motion into a perfect octave (P8) with soprano jumping more than a step.
+
+WHY IT MAY STILL BE MUSICAL:
+- Direct motions into perfect intervals are less strict than actual parallel motions.
+- With soprano stepwise motion, the "hidden" effect is greatly reduced.
+- In instrumental writing and faster textures, they are often acceptable.
+
+CORRECTION OPTIONS (prioritized):
+  1. Use stepwise motion in the soprano instead of a leap.
+  2. Introduce contrary motion in one of the outer voices.
+  3. Arrive at an interval other than a perfect octave.
+
+================================================================================
+
+RULE 5: DIRECT 5THS (0 violations)
+==================================
+
+THE RULE:
+Outer voices should not move in similar motion into a perfect fifth with an upward leap in the soprano.
+
+WHY IT MATTERS:
+- Similar to direct octaves, direct fifths weaken outer voice independence.
+- The effect is less severe than direct octaves but still discouraged in strict writing.
+- Clear counterpoint benefits from avoiding these implicit parallels.
+
+WHEN FLAGGED:
+The analyzer detects similar motion into a perfect fifth (P5) with soprano jumping more than a step.
+
+WHY IT MAY STILL BE MUSICAL:
+- Direct fifths are stylistically acceptable in many contexts, especially with soprano stepwise motion.
+- In faster harmonic movement and instrumental texture, they are common.
+- The rule is less strict than those for actual parallel intervals.
+
+CORRECTION OPTIONS (prioritized):
+  1. Use stepwise motion in the soprano instead of a leap.
+  2. Introduce contrary motion in one of the outer voices.
+  3. Arrive at an interval other than a perfect fifth.
+
+================================================================================
+
+RULE 6: VOICE CROSSING (26 violations)
+======================================
+
+THE RULE:
+Each voice should remain within its proper register. Lower voices should generally not rise above higher voices.
+
+WHY IT MATTERS:
+- Voice crossing blurs the registral hierarchy and confuses which line is which.
+- Clear voice layering (Soprano > Alto > Tenor > Bass) helps the listener track lines.
+- Crossing can make the ensemble sound muddled or unbalanced.
+
+WHEN FLAGGED:
+The analyzer detects a lower voice briefly moving above a higher voice.
+(Unison landings and intentional pitch swaps are already filtered out.)
+
+EXAMPLES FROM THIS SCORE:
+- m.9 beat 1: Alto crosses Tenor (G vs C)
+- m.16 beat 2: Alto crosses Tenor (E vs C#)
+- m.38 beat 1: Alto crosses Tenor (B vs D)
+
+WHY IT MAY STILL BE MUSICAL:
+- Imitative passages can tolerate brief crossings when subjects interweave.
+- A momentary crossing for color or textural contrast can be effective.
+- If the crossing is fast and unaccented, it may go unnoticed.
+
+CORRECTION OPTIONS (prioritized):
+  1. Keep voices in proper register: raise the lower voice or lower the higher voice.
+  2. When lines converge, use contrary motion or rests to maintain separation.
+  3. Re-octavate one note to restore vertical order without changing harmony.
+
+================================================================================
+
+RULE 7: AUGMENTED 2ND (0 violations)
+====================================
+
+THE RULE:
+A single voice should not leap by an augmented 2nd (three semitones), as this interval sounds awkward in melody.
+
+WHY IT MATTERS:
+- The augmented 2nd is an unusual melodic interval that often signals harmonic instability.
+- It is characteristic of harmonic minor and exotic scales but sounds jarring in major-key writing.
+- Avoiding it keeps melodic lines smooth and idiomatic to common-practice style.
+
+WHEN FLAGGED:
+The analyzer detects a melodic augmented 2nd in a single voice.
+
+WHY IT MAY STILL BE MUSICAL:
+- In harmonic minor contexts, augmented 2nds are idiomatic and expected.
+- In certain period styles and exotic harmonic contexts, they are acceptable.
+- Fast ornamental passages may make them less noticeable.
+
+CORRECTION OPTIONS (prioritized):
+  1. BEST: Fill the span with passing notes instead of direct leap.
+  2. Redirect one endpoint to avoid the augmented 2nd interval.
+  3. Change harmonic context to make the interval more idiomatic.
+
+================================================================================
+
+RULE 8: MELODIC TRITONE (1 violation)
+=====================================
+
+THE RULE:
+A single voice should not leap directly by tritone (augmented 4th or diminished 5th).
+
+WHY IT MATTERS:
+- The tritone is historically considered the "diabolus in musica" (devil in music).
+- It sounds harsh when leaped directly without preparation or resolution.
+- Filling the tritone by step is the standard correction.
+
+WHEN FLAGGED:
+The analyzer detects a tritone interval (6 semitones) in melodic motion within a single voice.
+
+EXAMPLES FROM THIS SCORE:
+- m.16 beat 1.5: Bass: C# → G
+
+WHY IT MAY STILL BE MUSICAL:
+- In harmonic minor and sequential contexts, tritone leaps can be idiomatic.
+- Fast harmonic movement can make tritone outlines less noticeable.
+- The tritone outline may be justified by harmonic function.
+
+CORRECTION OPTIONS (prioritized):
+  1. BEST: Fill the span with passing notes instead of direct leap.
+  2. Redirect one endpoint to the nearest chord tone (producing a 4th or 3rd).
+  3. Keep the harmonic target but approach/leave by stepwise motion.
+
+================================================================================
+
+RULE 9: LARGE LEAP (>=10 semitones) (8 violations)
+==================================================
+
+THE RULE:
+When a single voice leaps more than an octave, it should be followed by stepwise motion in the opposite direction.
+
+WHY IT MATTERS:
+- Large leaps are difficult to sing and disorient the listener.
+- Recovering by stepwise opposite motion creates a smooth contour and fills the skip.
+- This principle applies especially to vocal lines but is useful for all writing.
+
+WHEN FLAGGED:
+The analyzer detects a leap of 10+ semitones (major 7th or larger).
+
+EXAMPLES FROM THIS SCORE:
+- m.9 beat 1: Alto: F# → G (leap of 11 semitones)
+- m.30 beat 1: Alto: A → G (leap of 14 semitones)
+- m.32 beat 1: Bass: D → C (leap of 14 semitones)
+
+WHY IT MAY STILL BE MUSICAL:
+- Instrumental music can support larger leaps than vocal writing.
+- Octave transfers are expressive if balanced by good phrase contour.
+- Fast passage work can make large leaps less perceptually jarring.
+
+CORRECTION OPTIONS (prioritized):
+  1. Replace the large leap with two smaller intervals via passing notes.
+  2. Keep the leap but ensure stepwise recovery in the opposite direction.
+  3. Redistribute the octave transfer to another voice with better tessitura.
+
+================================================================================
+
+RULE 10: LEADING TONE UNRESOLVED (21 violations)
+=================================================
+
+THE RULE:
+The leading tone (scale degree 7) should resolve up by semitone to the tonic.
+In G major: F# must resolve to G, ideally in the same voice and on accented beats.
+
+WHY IT MATTERS:
+- The leading tone has strong harmonic gravity toward the tonic in tonal music.
+- This tendency creates smooth, logical voice leading and reinforces tonal function.
+- Violating this weakens tonal clarity and can make cadences sound uncertain.
+
+WHEN FLAGGED:
+The analyzer detects F# moving to any pitch other than G (E, A, C#, B, D, etc.)
+
+EXAMPLES FROM THIS SCORE:
+- m.3 beat 4: Alto: F# → E
+- m.7 beat 2: Soprano: F# → A
+- m.21 beat 2: Alto: F# → C#
+
+WHY IT MAY STILL BE MUSICAL:
+- In fugues, inner voice leading often prioritizes independence over tendency resolution.
+- Passing tones and sequences can legitimately defer or avoid immediate resolution.
+- If F# appears on a weak beat in a non-structural context, resolution is less critical.
+
+CORRECTION OPTIONS (prioritized):
+  1. PREFERRED: Move F# to G in the next note of the same voice.
+  2. If harmonic function prevents direct resolution, eventually move F# to G by step.
+  3. If F# is passing or ornamental, consider re-notating it as a lower voice note.
+
+================================================================================
+
+RECOMMENDED CORRECTION WORKFLOW
+================================
+
+STEP 1: PRIORITY FIXES (most important for pedagogical correctness)
+  o Rule 1: Parallel Perfect Fifths – Remove or convert to 6ths/3rds
+  o Rule 2: Parallel Octaves – Remove or convert to 10ths/6ths
+
+STEP 2: SECONDARY FIXES (important for harmonic clarity)
+  o Rule 10: Leading Tone Unresolved – Ensure F# → G at major cadence points
+  o Rule 6: Voice Crossing – Maintain clear voice register hierarchy
+
+STEP 3: LINE OPTIMIZATION (refine melodic shape)
+  o Rule 9: Large Leaps – Add passing notes or ensure opposite stepwise recovery
+  o Rule 8: Melodic Tritone – Fill tritone outline with passing motion
+
+STEP 4: DISCRETIONARY (musical judgment call)
+  o Rule 3: Parallel Unisons – Acceptable in imitative writing if intentional
+  o Rules 4-5: Direct intervals – Less critical than actual parallel motion
+
+QUICK TRIAGE:
+Focus on measures 3-7, 16, 21, 32, and 37 first.
+These contain most structural violations (parallel P5ths/P8ves and unresolved LT).
 
 End of review.

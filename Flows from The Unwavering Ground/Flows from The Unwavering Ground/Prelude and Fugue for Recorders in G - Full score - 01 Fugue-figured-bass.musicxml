@@ -187,37 +187,37 @@
     </direction>
     <direction placement="above">
       <direction-type>
-        <words default-x="18" default-y="84" relative-x="18" color="#D7263D" font-weight="bold" enclosure="rectangle">1. [Crimson Red] Parallel P5ths</words>
+        <words default-x="18" default-y="84" color="#D7263D" font-weight="bold" enclosure="rectangle">1. [Crimson Red] Parallel P5ths</words>
       </direction-type>
     </direction>
     <direction placement="above">
       <direction-type>
-        <words default-x="538" default-y="84" relative-x="538" color="#F46036" font-weight="bold" enclosure="rectangle">2. [Vermilion Orange] Parallel octaves</words>
+        <words default-x="18" default-y="72" color="#F46036" font-weight="bold" enclosure="rectangle">2. [Vermilion Orange] Parallel octaves</words>
       </direction-type>
     </direction>
     <direction placement="above">
       <direction-type>
-        <words default-x="1058" default-y="84" relative-x="1058" color="#2E294E" font-weight="bold" enclosure="rectangle">3. [Indigo] Parallel unisons</words>
+        <words default-x="18" default-y="60" color="#2E294E" font-weight="bold" enclosure="rectangle">3. [Indigo] Parallel unisons</words>
       </direction-type>
     </direction>
     <direction placement="above">
       <direction-type>
-        <words default-x="18" default-y="68" relative-x="18" color="#3A86FF" font-weight="bold" enclosure="rectangle">6. [Azure Blue] Voice crossing</words>
+        <words default-x="18" default-y="48" color="#3A86FF" font-weight="bold" enclosure="rectangle">6. [Azure Blue] Voice crossing</words>
       </direction-type>
     </direction>
     <direction placement="above">
       <direction-type>
-        <words default-x="538" default-y="68" relative-x="538" color="#FB5607" font-weight="bold" enclosure="rectangle">8. [Safety Orange] Melodic tritone</words>
+        <words default-x="18" default-y="36" color="#FB5607" font-weight="bold" enclosure="rectangle">8. [Safety Orange] Melodic tritone</words>
       </direction-type>
     </direction>
     <direction placement="above">
       <direction-type>
-        <words default-x="1058" default-y="68" relative-x="1058" color="#8338EC" font-weight="bold" enclosure="rectangle">9. [Violet] Large leap</words>
+        <words default-x="18" default-y="24" color="#8338EC" font-weight="bold" enclosure="rectangle">9. [Violet] Large leap</words>
       </direction-type>
     </direction>
     <direction placement="above">
       <direction-type>
-        <words default-x="18" default-y="52" relative-x="18" color="#FFBE0B" font-weight="bold" enclosure="rectangle">10. [Golden Yellow] Leading tone unresolved</words>
+        <words default-x="18" default-y="12" color="#FFBE0B" font-weight="bold" enclosure="rectangle">10. [Golden Yellow] Leading tone unresolved</words>
       </direction-type>
     </direction>
 

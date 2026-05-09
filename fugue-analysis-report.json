@@ -1,5 +1,5 @@
 {
-  "input": "Flows from The Unwavering Ground/Flows from The Unwavering Ground/Prelude and Fugue for Recorders in G - Full score - 01 Fugue.musicxml",
+  "input": "./Flows from The Unwavering Ground/Flows from The Unwavering Ground/Prelude and Fugue for Recorders in G - Full score - 01 Fugue.musicxml",
   "violations": [
     {
       "rule": "Leading tone unresolved",
