@@ -1,0 +1,22 @@
+# Node and build artifacts
+node_modules/
+dist/
+
+# Temporary / local analysis scratch files
+test-*.json
+
+# Generated MusicXML outputs from analyzer
+*-figured-bass.musicxml
+
+# Generated text/json analysis reports
+*analysis-report.txt
+*analysis-report.json
+
+# Generated PDFs from render/merge pipeline
+fugue-colored.pdf
+fugue-professional-report.pdf
+fugue-complete-analysis.pdf
+rule-review.pdf
+
+# Common local OS/editor noise
+.DS_Store
