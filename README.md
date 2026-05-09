@@ -22,10 +22,34 @@ npm install
 npm run start -- path/to/score.musicxml
 ```
 
+Optional explicit bass part selection (recommended for scores with multiple low staves):
+
+```bash
+npm run start -- path/to/score.musicxml --bass-part-id P4
+```
+
 Optional output path:
 
 ```bash
 npm run start -- path/to/score.musicxml --out figures.csv
+```
+
+Optional PDF export (default uses headless LilyPond pipeline):
+
+```bash
+npm run start -- path/to/score.musicxml --pdf
+```
+
+Optional PDF path:
+
+```bash
+npm run start -- path/to/score.musicxml --pdf --pdf-out path/to/score.pdf
+```
+
+Optional explicit PDF command (overrides default renderer):
+
+```bash
+npm run start -- path/to/score.musicxml --pdf --pdf-cmd my-renderer-cli
 ```
 
 ## Output columns

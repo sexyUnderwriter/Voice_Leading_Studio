@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { spawnSync } from "node:child_process";
 import { XMLParser } from "fast-xml-parser";
 
 type Step = "C" | "D" | "E" | "F" | "G" | "A" | "B";
@@ -21,6 +22,8 @@ type NoteEvent = {
   keyFifths: number;
   measure: number;
   beat: number;
+  tieStart: boolean;
+  tieStop: boolean;
 };
 
 type FigureAccidental = "double-flat" | "flat" | "natural" | "sharp" | "double-sharp";
@@ -85,16 +88,57 @@ function asArray<T>(value: T | T[] | undefined): T[] {
 function parseArgs(argv: string[]) {
   const args = argv.slice(2);
   if (args.length === 0) {
-    throw new Error("Usage: npm run start -- <input.musicxml> [--out output.musicxml]");
+    throw new Error(
+      "Usage: npm run start -- <input.musicxml> [--out output.musicxml] [--bass-part-id P4] [--analyze] [--analyze-only] [--analyze-out report.txt] [--pdf] [--pdf-out output.pdf] [--pdf-cmd command]",
+    );
   }
 
   let input = "";
   let out = "";
+  let bassPartId = "";
+  let analyze = false;
+  let analyzeOnly = false;
+  let analyzeOut = "";
+  let exportPdf = false;
+  let pdfOut = "";
+  let pdfCmd = "";
 
   for (let i = 0; i < args.length; i += 1) {
     const token = args[i];
     if (token === "--out") {
       out = args[i + 1] ?? "";
+      i += 1;
+      continue;
+    }
+    if (token === "--bass-part-id") {
+      bassPartId = args[i + 1] ?? "";
+      i += 1;
+      continue;
+    }
+    if (token === "--analyze" || token === "--analyze-only") {
+      analyze = true;
+      if (token === "--analyze-only") analyzeOnly = true;
+      continue;
+    }
+    if (token === "--analyze-out") {
+      analyzeOut = args[i + 1] ?? "";
+      analyze = true;
+      i += 1;
+      continue;
+    }
+    if (token === "--pdf") {
+      exportPdf = true;
+      continue;
+    }
+    if (token === "--pdf-out") {
+      pdfOut = args[i + 1] ?? "";
+      exportPdf = true;
+      i += 1;
+      continue;
+    }
+    if (token === "--pdf-cmd") {
+      pdfCmd = args[i + 1] ?? "";
+      exportPdf = true;
       i += 1;
       continue;
     }
@@ -112,7 +156,71 @@ function parseArgs(argv: string[]) {
     out = path.join(parsed.dir, `${parsed.name}-figured-bass.musicxml`);
   }
 
-  return { input, out };
+  if (exportPdf && !pdfOut) {
+    const parsed = path.parse(out);
+    pdfOut = path.join(parsed.dir, `${parsed.name}.pdf`);
+  }
+
+  if (analyzeOnly && exportPdf) {
+    throw new Error("--pdf cannot be used with --analyze-only because no score output file is written.");
+  }
+
+  return { input, out, bassPartId, analyze, analyzeOnly, analyzeOut, exportPdf, pdfOut, pdfCmd };
+}
+
+function pickPdfCommand(explicitCmd: string): string {
+  const candidates = explicitCmd
+    ? [explicitCmd]
+    : [
+        process.env.PDF_RENDER_CMD ?? "",
+      ].filter((s) => s.length > 0);
+
+  for (const cmd of candidates) {
+    const test = spawnSync(cmd, ["--version"], { encoding: "utf8" });
+    if (!test.error) return cmd;
+  }
+
+  throw new Error(
+    "No custom PDF renderer command found. Pass --pdf-cmd <command> or set PDF_RENDER_CMD.",
+  );
+}
+
+function exportMusicXmlToPdf(xmlPath: string, pdfPath: string, explicitCmd: string) {
+  if (explicitCmd || process.env.PDF_RENDER_CMD) {
+    const cmd = pickPdfCommand(explicitCmd);
+    const result = spawnSync(cmd, [xmlPath, "-o", pdfPath], { encoding: "utf8" });
+    if (result.error || result.status !== 0) {
+      const stderr = (result.stderr ?? "").trim();
+      const stdout = (result.stdout ?? "").trim();
+      const detail = stderr || stdout || result.error?.message || "unknown error";
+      throw new Error(`PDF export failed via '${cmd}': ${detail}`);
+    }
+    return;
+  }
+
+  // Default renderer: headless LilyPond pipeline.
+  const outNoExt = pdfPath.replace(/\.pdf$/i, "");
+  const lyPath = `${outNoExt}.ly`;
+
+  const musicxml2ly = spawnSync("musicxml2ly", [xmlPath, "-o", lyPath], { encoding: "utf8" });
+  if (musicxml2ly.error || musicxml2ly.status !== 0) {
+    const stderr = (musicxml2ly.stderr ?? "").trim();
+    const stdout = (musicxml2ly.stdout ?? "").trim();
+    const detail = stderr || stdout || musicxml2ly.error?.message || "unknown error";
+    throw new Error(`PDF export failed at musicxml2ly step: ${detail}`);
+  }
+
+  const lilypond = spawnSync("lilypond", ["-o", outNoExt, lyPath], { encoding: "utf8" });
+  if (lilypond.error || lilypond.status !== 0) {
+    const stderr = (lilypond.stderr ?? "").trim();
+    const stdout = (lilypond.stdout ?? "").trim();
+    const detail = stderr || stdout || lilypond.error?.message || "unknown error";
+    throw new Error(`PDF export failed at lilypond step: ${detail}`);
+  }
+
+  if (fs.existsSync(lyPath)) {
+    fs.unlinkSync(lyPath);
+  }
 }
 
 function pitchToMidi(pitch: Pitch): number {
@@ -307,6 +415,17 @@ function parseScore(xmlText: string): any {
   return score;
 }
 
+/**
+ * Normalizes incoming MusicXML text by stripping BOM and any non-tag bytes
+ * that appear before the first '<'. Some exports include stray leading chars.
+ */
+function normalizeXmlText(xmlText: string): string {
+  const withoutBom = xmlText.replace(/^\uFEFF/, "");
+  const firstTag = withoutBom.indexOf("<");
+  if (firstTag <= 0) return withoutBom;
+  return withoutBom.slice(firstTag);
+}
+
 function readDivisions(measure: any, fallback: number): number {
   const attributes = measure.attributes;
   const divisions = attributes?.divisions;
@@ -327,6 +446,13 @@ function extractDivisions(score: any): number {
   return 1;
 }
 
+function sumDurations(items: any[]): number {
+  return items.reduce((sum, item) => {
+    const d = Number(item?.duration ?? 0);
+    return Number.isFinite(d) ? sum + d : sum;
+  }, 0);
+}
+
 function extractPartEvents(part: any): NoteEvent[] {
   const measures = asArray(part.measure);
   const events: NoteEvent[] = [];
@@ -334,6 +460,9 @@ function extractPartEvents(part: any): NoteEvent[] {
   let absoluteDiv = 0;
   let divisions = 1;
   let keyFifths = 0;
+  let transposeChromatic = 0;
+  let transposeDiatonic = 0;
+  let transposeOctave = 0;
 
   for (let m = 0; m < measures.length; m += 1) {
     const measure = measures[m];
@@ -345,7 +474,17 @@ function extractPartEvents(part: any): NoteEvent[] {
       keyFifths = fifthsVal;
     }
 
+    // Track transposition changes so analysis can use sounding pitch.
+    const t = measure.attributes?.transpose;
+    if (t) {
+      transposeChromatic = Number(t.chromatic ?? 0);
+      transposeDiatonic = Number(t.diatonic ?? 0);
+      transposeOctave = Number(t["octave-change"] ?? 0);
+    }
+
     const notes = asArray(measure.note);
+    const forwardTotal = sumDurations(asArray(measure.forward));
+    const backupTotal = sumDurations(asArray(measure.backup));
 
     let cursor = 0;
     let chordAnchor = 0;
@@ -365,13 +504,17 @@ function extractPartEvents(part: any): NoteEvent[] {
         const step = String(p.step) as Step;
         const alter = Number(p.alter ?? 0);
         const octave = Number(p.octave);
+        const ties = asArray(note.tie);
+        const tieStart = ties.some((t: any) => String(t?.["@_type"] ?? "") === "start");
+        const tieStop = ties.some((t: any) => String(t?.["@_type"] ?? "") === "stop");
 
         if (Number.isFinite(octave) && STEP_TO_INDEX[step] !== undefined) {
           const pitch: Pitch = { step, alter, octave };
-          const midi = pitchToMidi(pitch);
+          const midi = pitchToMidi(pitch) + transposeChromatic + transposeOctave * 12;
           const stepIndex = STEP_TO_INDEX[step];
-          const degreeAbs = octave * 7 + stepIndex;
+          const degreeAbs = octave * 7 + stepIndex + transposeDiatonic + transposeOctave * 7;
 
+          const parsedMeasure = Number(measure["@_number"] ?? "");
           events.push({
             start: absoluteDiv + localStart,
             end: absoluteDiv + localStart + duration,
@@ -381,8 +524,10 @@ function extractPartEvents(part: any): NoteEvent[] {
             stepIndex,
             degreeAbs,
             keyFifths,
-            measure: Number(measure["@_number"] ?? m + 1),
+            measure: Number.isFinite(parsedMeasure) ? parsedMeasure : m + 1,
             beat: localStart / divisions + 1,
+            tieStart,
+            tieStop,
           });
         }
       }
@@ -391,6 +536,12 @@ function extractPartEvents(part: any): NoteEvent[] {
         cursor += duration;
       }
     }
+
+    // MusicXML may use forward/backup for timeline placement (including
+    // measures with rests encoded as forward-only). Apply net movement so
+    // absolute time stays aligned across parts.
+    cursor += forwardTotal - backupTotal;
+    if (cursor < 0) cursor = 0;
 
     absoluteDiv += cursor;
   }
@@ -762,9 +913,18 @@ function eventSig(slots: FigureSlot[], durationDiv: number): string {
   return `${slots.map(slotSig).join("|")}@${durationDiv}`;
 }
 
+function stripAllFiguredBass(xmlText: string): { strippedXml: string; removedCount: number } {
+  const pattern = /\s*<figured-bass\b[\s\S]*?<\/figured-bass>\s*/g;
+  const matches = xmlText.match(pattern);
+  const removedCount = matches ? matches.length : 0;
+  const strippedXml = xmlText.replace(pattern, "\n");
+  return { strippedXml, removedCount };
+}
+
 function buildFigureChangeReport(
   inferred: FigureEvent[],
   existing: ExistingFigureEvent[],
+  includeAdditions = true,
 ): FigureChange[] {
   const inferredMap = new Map<number, FigureEvent[]>();
   const existingMap = new Map<number, ExistingFigureEvent[]>();
@@ -799,8 +959,11 @@ function buildFigureChangeReport(
       changes.push({ measure, reason: `removed outdated figures (${ex.map((f) => f.figures).join(", ")})` });
       continue;
     }
-    if (infSig.length > 0 && exSig.length === 0) {
+    if (includeAdditions && infSig.length > 0 && exSig.length === 0) {
       changes.push({ measure, reason: `added missing figures (${inf.map((f) => f.figures).join(", ")})` });
+      continue;
+    }
+    if (!includeAdditions && exSig.length === 0 && infSig.length > 0) {
       continue;
     }
     if (infSig.join(";") !== exSig.join(";")) {
@@ -828,6 +991,36 @@ function getBassPartId(xmlText: string, bassPartIndex: number): string {
     i += 1;
   }
   throw new Error(`Bass part index ${bassPartIndex} not found in XML.`);
+}
+
+function getPartIdsInOrder(xmlText: string): string[] {
+  const ids: string[] = [];
+  const partIdRegex = /<part\s[^>]*id="([^"]+)"/g;
+  let match: RegExpExecArray | null;
+  while ((match = partIdRegex.exec(xmlText)) !== null) {
+    ids.push(match[1]);
+  }
+  return ids;
+}
+
+function resolveBassPartIndex(
+  allPartEvents: NoteEvent[][],
+  xmlText: string,
+  requestedBassPartId: string,
+): number {
+  if (!requestedBassPartId) {
+    return findBassPartIndex(allPartEvents);
+  }
+
+  const partIds = getPartIdsInOrder(xmlText);
+  const idx = partIds.indexOf(requestedBassPartId);
+  if (idx === -1) {
+    const available = partIds.length > 0 ? partIds.join(", ") : "(none found)";
+    throw new Error(
+      `Requested bass part id "${requestedBassPartId}" not found. Available part ids: ${available}`,
+    );
+  }
+  return idx;
 }
 
 /**
@@ -1276,10 +1469,711 @@ function insertFiguredBass(
   return result;
 }
 
-function main() {
-  const { input, out } = parseArgs(process.argv);
+// ─────────────────────────────────────────────────────────────────────────────
+// Voice-leading analysis
+// Rules sourced from:
+//   Piston, Harmony (1948); Kostka & Payne, Tonal Harmony (2004);
+//   Wikipedia – "Voice leading" (Common-practice conventions and pedagogy)
+// ─────────────────────────────────────────────────────────────────────────────
 
-  const xmlText = fs.readFileSync(input, "utf8");
+type VoiceLeadingViolation = {
+  rule: string;
+  measure: number;
+  beat: number;
+  timeDiv: number;
+  voiceNames: string;
+  partIndices: number[];
+  noteTargets?: Array<{ partIndex: number; startDiv: number }>;
+  detail: string;
+};
+
+type ColorLegendEntry = {
+  rule: string;
+  color: string;
+};
+
+const RULE_COLOR_SCHEME: ColorLegendEntry[] = [
+  { rule: "Parallel P5ths", color: "#D7263D" },
+  { rule: "Parallel octaves", color: "#F46036" },
+  { rule: "Parallel unisons", color: "#2E294E" },
+  { rule: "Direct octaves", color: "#1B998B" },
+  { rule: "Direct 5ths", color: "#6A4C93" },
+  { rule: "Voice crossing", color: "#3A86FF" },
+  { rule: "Augmented 2nd", color: "#FF006E" },
+  { rule: "Melodic tritone", color: "#FB5607" },
+  { rule: "Large leap", color: "#8338EC" },
+  { rule: "Leading tone unresolved", color: "#FFBE0B" },
+];
+
+const RULE_PRIORITY: string[] = [
+  "Parallel P5ths",
+  "Parallel octaves",
+  "Parallel unisons",
+  "Direct octaves",
+  "Direct 5ths",
+  "Voice crossing",
+  "Leading tone unresolved",
+  "Melodic tritone",
+  "Augmented 2nd",
+  "Large leap",
+];
+
+const HEX_TO_COLOR_NAME: Record<string, string> = {
+  "#D7263D": "Crimson Red",
+  "#F46036": "Vermilion Orange",
+  "#2E294E": "Indigo",
+  "#1B998B": "Teal",
+  "#6A4C93": "Royal Purple",
+  "#3A86FF": "Azure Blue",
+  "#FF006E": "Hot Pink",
+  "#FB5607": "Safety Orange",
+  "#8338EC": "Violet",
+  "#FFBE0B": "Golden Yellow",
+};
+
+/** Tonic pitch-class (0=C) for a given key signature (fifths). */
+function tonicPitchClass(fifths: number): number {
+  return ((7 * fifths) % 12 + 12) % 12;
+}
+
+/** Human-readable note label, e.g. "F#" or "Bb". */
+function noteLabel(n: NoteEvent): string {
+  const acc =
+    n.alter === 2  ? "##" :
+    n.alter === 1  ? "#"  :
+    n.alter === -1 ? "b"  :
+    n.alter === -2 ? "bb" : "";
+  return `${n.step}${acc}`;
+}
+
+/** Extract <part-name> values from the score XML in part order. */
+function getPartNames(xmlText: string, numParts: number): string[] {
+  const names: string[] = [];
+  // <part-name> sits inside each <score-part> in <part-list>
+  const re = /<part-name[^>]*>([^<]+)<\/part-name>/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(xmlText)) !== null) {
+    names.push(m[1].trim());
+  }
+  while (names.length < numParts) names.push(`Part ${names.length + 1}`);
+  return names.slice(0, numParts);
+}
+
+/** Chromatic interval class (0–11) between two MIDI values. */
+function chromClass(midiA: number, midiB: number): number {
+  return Math.abs(midiA - midiB) % 12;
+}
+
+/** Diatonic interval class (0–6, where 0 = unison/octave) between degreeAbs. */
+function diatClass(degA: number, degB: number): number {
+  return Math.abs(degA - degB) % 7;
+}
+
+/** True if the interval between A and B is a perfect fifth (P5 = 7 semitones, diatonic 5th = 4 steps). */
+function isPerfectFifth(midiA: number, midiB: number, degA: number, degB: number): boolean {
+  return chromClass(midiA, midiB) === 7 && diatClass(degA, degB) === 4;
+}
+
+/** True if the interval is a perfect octave (chromatic 0 mod 12, voices not in unison). */
+function isPerfectOctave(midiA: number, midiB: number): boolean {
+  return midiA !== midiB && chromClass(midiA, midiB) === 0;
+}
+
+/**
+ * Analyse all parts for baroque voice-leading violations.
+ *
+ * Rules checked:
+ *   1. Parallel perfect fifths   (Piston §5; Kostka & Payne p.78)
+ *   2. Parallel perfect octaves  (ibid.)
+ *   3. Parallel unisons          (ibid.)
+ *   4. Direct / hidden octaves   – outer voices, soprano leaps (Piston p.25)
+ *   5. Direct / hidden fifths    – outer voices, soprano leaps (ibid.)
+ *   6. Voice crossing            (Wikipedia – voice-leading §chord-connection)
+ *   7. Augmented melodic 2nd     (Kostka & Payne p.71-72)
+ *   8. Melodic tritone leap      (ibid.)
+ *   9. Large leap ≥ minor 7th   (ibid.)
+ *  10. Leading-tone non-resolution in upper voices (ibid.)
+ */
+function analyzeVoiceLeading(
+  allPartEvents: NoteEvent[][],
+  partNames: string[],
+  bassPartIndex: number,
+): VoiceLeadingViolation[] {
+  const violations: VoiceLeadingViolation[] = [];
+  const numParts = allPartEvents.length;
+
+  // Identify soprano (highest average MIDI, excluding bass) and bass for outer-voice checks.
+  const avgMidis = allPartEvents.map((events) =>
+    events.length === 0 ? -Infinity : events.reduce((s, n) => s + n.midi, 0) / events.length,
+  );
+  let sopranoIndex = -1;
+  let highestAvg = -Infinity;
+  for (let i = 0; i < numParts; i++) {
+    if (i !== bassPartIndex && avgMidis[i] > highestAvg) {
+      highestAvg = avgMidis[i];
+      sopranoIndex = i;
+    }
+  }
+
+  // ── Helper: note sounding in a part at absolute time t ──────────────────
+  function soundingAt(part: NoteEvent[], t: number): NoteEvent | null {
+    for (const n of part) {
+      if (n.start <= t && n.end > t) return n;
+    }
+    return null;
+  }
+
+  // All unique attack times across all parts.
+  const allAttacks = new Set<number>();
+  for (const part of allPartEvents) {
+    for (const n of part) allAttacks.add(n.start);
+  }
+  const times = [...allAttacks].sort((a, b) => a - b);
+
+  // ── Rule helpers ─────────────────────────────────────────────────────────
+  function push(
+    rule: string,
+    measure: number,
+    beat: number,
+    timeDiv: number,
+    partIndices: number[],
+    voiceNames: string,
+    detail: string,
+    noteTargets?: Array<{ partIndex: number; startDiv: number }>,
+  ) {
+    violations.push({ rule, measure, beat, timeDiv, partIndices, voiceNames, detail, noteTargets });
+  }
+
+  // ── 1–3: Cross-voice parallel & unison analysis ──────────────────────────
+  for (let pi = 0; pi < numParts; pi++) {
+    for (let pj = pi + 1; pj < numParts; pj++) {
+      const partA = allPartEvents[pi];
+      const partB = allPartEvents[pj];
+      const nameAB = `${partNames[pi]} & ${partNames[pj]}`;
+      const isOuterPair = (pi === sopranoIndex && pj === bassPartIndex) ||
+                          (pj === sopranoIndex && pi === bassPartIndex);
+
+      let prevA: NoteEvent | null = null;
+      let prevB: NoteEvent | null = null;
+
+      for (const t of times) {
+        const curA = soundingAt(partA, t);
+        const curB = soundingAt(partB, t);
+
+        if (!curA) prevA = null;
+        if (!curB) prevB = null;
+
+        if (curA && curB && prevA && prevB) {
+          const aAttacked = curA !== prevA;
+          const bAttacked = curB !== prevB;
+
+          if (aAttacked || bAttacked) {
+            const bothMoved = prevA.midi !== curA.midi && prevB.midi !== curB.midi;
+
+            if (bothMoved) {
+              // Rule 1: Parallel perfect fifths
+              if (
+                isPerfectFifth(prevA.midi, prevB.midi, prevA.degreeAbs, prevB.degreeAbs) &&
+                isPerfectFifth(curA.midi, curB.midi, curA.degreeAbs, curB.degreeAbs)
+              ) {
+                const n = aAttacked ? curA : curB;
+                push("Parallel P5ths", n.measure, n.beat,
+                  n.start,
+                  [pi, pj],
+                  nameAB,
+                  `P5 → P5 (${noteLabel(prevA)}-${noteLabel(prevB)} → ${noteLabel(curA)}-${noteLabel(curB)})`,
+                  [
+                    { partIndex: pi, startDiv: prevA.start },
+                    { partIndex: pj, startDiv: prevB.start },
+                    { partIndex: pi, startDiv: curA.start },
+                    { partIndex: pj, startDiv: curB.start },
+                  ],
+                );
+              }
+
+              // Rule 2: Parallel perfect octaves
+              if (isPerfectOctave(prevA.midi, prevB.midi) && isPerfectOctave(curA.midi, curB.midi)) {
+                const n = aAttacked ? curA : curB;
+                push("Parallel octaves", n.measure, n.beat,
+                  n.start,
+                  [pi, pj],
+                  nameAB,
+                  `P8 → P8 (${noteLabel(prevA)}-${noteLabel(prevB)} → ${noteLabel(curA)}-${noteLabel(curB)})`,
+                  [
+                    { partIndex: pi, startDiv: prevA.start },
+                    { partIndex: pj, startDiv: prevB.start },
+                    { partIndex: pi, startDiv: curA.start },
+                    { partIndex: pj, startDiv: curB.start },
+                  ],
+                );
+              }
+
+              // Rule 3: Parallel unisons
+              if (prevA.midi === prevB.midi && curA.midi === curB.midi) {
+                const n = aAttacked ? curA : curB;
+                push("Parallel unisons", n.measure, n.beat,
+                  n.start,
+                  [pi, pj],
+                  nameAB,
+                  `unison → unison on ${noteLabel(curA)}`,
+                  [
+                    { partIndex: pi, startDiv: prevA.start },
+                    { partIndex: pj, startDiv: prevB.start },
+                    { partIndex: pi, startDiv: curA.start },
+                    { partIndex: pj, startDiv: curB.start },
+                  ],
+                );
+              }
+            }
+
+            // Rules 4 & 5: Direct / hidden octaves and fifths (outer voices only)
+            if (isOuterPair && aAttacked && bAttacked) {
+              const soprano = sopranoIndex === pi ? curA : curB;
+              const sopranoPrev = sopranoIndex === pi ? prevA : prevB;
+              const bass = sopranoIndex === pi ? curB : curA;
+              const bassPrev = sopranoIndex === pi ? prevB : prevA;
+
+              const sopranoLeap = Math.abs(soprano.midi - sopranoPrev.midi) > 2; // > whole step
+              const sopranoDir = Math.sign(soprano.midi - sopranoPrev.midi);
+              const bassDir = Math.sign(bass.midi - bassPrev.midi);
+              const similarMotion = sopranoDir !== 0 && sopranoDir === bassDir;
+
+              if (sopranoLeap && similarMotion) {
+                if (isPerfectOctave(soprano.midi, bass.midi)) {
+                  push("Direct octaves", soprano.measure, soprano.beat,
+                    soprano.start,
+                    [sopranoIndex, bassPartIndex],
+                    `${partNames[sopranoIndex]} & ${partNames[bassPartIndex]}`,
+                    `outer voices reach P8 by similar motion, soprano leaps (${noteLabel(sopranoPrev)}→${noteLabel(soprano)})`);
+                } else if (isPerfectFifth(soprano.midi, bass.midi, soprano.degreeAbs, bass.degreeAbs)) {
+                  push("Direct 5ths", soprano.measure, soprano.beat,
+                    soprano.start,
+                    [sopranoIndex, bassPartIndex],
+                    `${partNames[sopranoIndex]} & ${partNames[bassPartIndex]}`,
+                    `outer voices reach P5 by similar motion, soprano leaps (${noteLabel(sopranoPrev)}→${noteLabel(soprano)})`);
+                }
+              }
+            }
+          }
+
+          // Rule 6: Voice crossing — check whenever either voice attacks
+          if ((aAttacked || bAttacked)) {
+            // Suppress common benign textures:
+            // - both voices landing on unison (line meeting point)
+            // - immediate pitch exchange / handoff (imitative voice swap)
+            const landsOnUnison = curA.midi === curB.midi;
+            const voiceExchange = curA.midi === prevB.midi && curB.midi === prevA.midi;
+            if (landsOnUnison || voiceExchange) {
+              // no-op
+            } else {
+            const prevAHigher = prevA.midi > prevB.midi;
+            const curAHigher  = curA.midi  > curB.midi;
+            if (prevA.midi !== prevB.midi && prevAHigher !== curAHigher) {
+              const n = aAttacked ? curA : curB;
+              push("Voice crossing", n.measure, n.beat,
+                n.start,
+                [pi, pj],
+                nameAB,
+                `${partNames[pi]} crosses ${partNames[pj]} (${noteLabel(curA)} vs ${noteLabel(curB)})`);
+            }
+            }
+          }
+        }
+
+        if (curA) prevA = curA;
+        if (curB) prevB = curB;
+      }
+    }
+  }
+
+  // ── 7–10: Per-voice melodic analysis ─────────────────────────────────────
+  for (let p = 0; p < numParts; p++) {
+    const notes = allPartEvents[p];
+    const name  = partNames[p];
+
+    for (let i = 1; i < notes.length; i++) {
+      const prev = notes[i - 1];
+      const curr = notes[i];
+
+      // Skip simultaneous notes (chord tones) and notes separated by long rests
+      if (curr.start === prev.start) continue;
+
+      const chromDist = Math.abs(curr.midi - prev.midi);
+      const diatDist  = Math.abs(curr.degreeAbs - prev.degreeAbs);
+
+      // Rule 7: Augmented 2nd (diatonic step = 1 letter, chromatic = 3 semitones)
+      // e.g. F natural → G# or G# → F natural
+      if (diatDist % 7 === 1 && chromDist % 12 === 3 && chromDist < 12) {
+        push("Augmented 2nd", curr.measure, curr.beat,
+          curr.start,
+          [p],
+          name,
+          `melodic aug 2nd: ${noteLabel(prev)} → ${noteLabel(curr)}`);
+      }
+
+      // Rule 8: Melodic tritone leap (diatonic 4th, chromatic 6 = aug 4th / dim 5th)
+      if (diatDist % 7 === 3 && chromDist % 12 === 6 && chromDist < 12) {
+        push("Melodic tritone", curr.measure, curr.beat,
+          curr.start,
+          [p],
+          name,
+          `tritone leap: ${noteLabel(prev)} → ${noteLabel(curr)}`);
+      }
+
+      // Rule 9: Large leap ≥ minor 7th (10 semitones)
+      if (chromDist >= 10) {
+        push("Large leap", curr.measure, curr.beat,
+          curr.start,
+          [p],
+          name,
+          `leap of ${chromDist} semitone${chromDist !== 1 ? "s" : ""}: ${noteLabel(prev)} → ${noteLabel(curr)}`);
+      }
+
+      // Rule 10: Leading-tone non-resolution in upper voices
+      // Leading tone = 1 semitone below tonic. Should resolve up by half step.
+      if (p !== bassPartIndex) {
+        const tonic   = tonicPitchClass(prev.keyFifths);
+        const leadingPC = (tonic - 1 + 12) % 12;
+        if ((prev.midi % 12) === leadingPC) {
+          // Tie continuation (or repeated pitch carry-over) is not a melodic
+          // leading-tone "failure"; wait for the next pitch change.
+          if ((curr.tieStop && curr.midi === prev.midi) || curr.midi === prev.midi) {
+            continue;
+          }
+
+          // Allow inner-voice descent to the 5th (common baroque exception)
+          const fifth = (tonic + 7) % 12;
+          const resolvedUp = (curr.midi % 12) === tonic;
+          const innerVoiceException = p !== sopranoIndex && (curr.midi % 12) === fifth;
+          if (!resolvedUp && !innerVoiceException) {
+            push("Leading tone unresolved", prev.measure, prev.beat,
+              prev.start,
+              [p],
+              name,
+              `LT ${noteLabel(prev)} → ${noteLabel(curr)} (expected tonic ${["C","C#","D","Eb","E","F","F#","G","Ab","A","Bb","B"][tonic]})`);
+          }
+        }
+      }
+    }
+  }
+
+  return violations.sort((a, b) => a.measure - b.measure || a.beat - b.beat);
+}
+
+function getRuleColor(rule: string): string {
+  return RULE_COLOR_SCHEME.find((e) => e.rule === rule)?.color ?? "#C1121F";
+}
+
+function getRuleNumber(rule: string): number {
+  const idx = RULE_COLOR_SCHEME.findIndex((e) => e.rule === rule);
+  return idx >= 0 ? idx + 1 : 0;
+}
+
+function formatRuleNumberTag(rules: Set<string>): string {
+  const nums = [...rules]
+    .map((r) => getRuleNumber(r))
+    .filter((n) => n > 0)
+    .sort((a, b) => a - b);
+  return nums.join(",");
+}
+
+function colorNameFromHex(hex: string): string {
+  return HEX_TO_COLOR_NAME[hex.toUpperCase()] ?? hex;
+}
+
+function chooseColorForRules(rules: Set<string>): string {
+  for (const preferred of RULE_PRIORITY) {
+    if (rules.has(preferred)) return getRuleColor(preferred);
+  }
+  const first = [...rules][0];
+  return getRuleColor(first);
+}
+
+function colorVoiceLeadingViolations(
+  xmlText: string,
+  violations: VoiceLeadingViolation[],
+): string {
+  if (violations.length === 0) return xmlText;
+
+  const partIds = getPartIdsInOrder(xmlText);
+  const targets = new Map<string, Set<string>>();
+
+  for (const v of violations) {
+    if (v.noteTargets && v.noteTargets.length > 0) {
+      for (const t of v.noteTargets) {
+        if (t.partIndex < 0 || t.partIndex >= partIds.length) continue;
+        const key = `${t.partIndex}:${t.startDiv}`;
+        if (!targets.has(key)) targets.set(key, new Set<string>());
+        targets.get(key)!.add(v.rule);
+      }
+      continue;
+    }
+
+    for (const partIndex of v.partIndices) {
+      if (partIndex < 0 || partIndex >= partIds.length) continue;
+      const key = `${partIndex}:${v.timeDiv}`;
+      if (!targets.has(key)) targets.set(key, new Set<string>());
+      targets.get(key)!.add(v.rule);
+    }
+  }
+
+  const insertions: Array<{ at: number; text: string }> = [];
+
+  for (let partIndex = 0; partIndex < partIds.length; partIndex += 1) {
+    const partId = partIds[partIndex];
+    const partOpenRegex = new RegExp(`<part\\s[^>]*id="${partId}"[^>]*>`);
+    const partMatch = partOpenRegex.exec(xmlText);
+    if (!partMatch) continue;
+
+    const partContentStart = partMatch.index + partMatch[0].length;
+    const partContentEnd = xmlText.indexOf("</part>", partContentStart);
+    if (partContentEnd === -1) continue;
+
+    const segment = xmlText.slice(partContentStart, partContentEnd);
+    const tagRe = /<(\/?)(\w[\w.-]*)([^>]*)>/g;
+
+    let absoluteDiv = 0;
+    let cursor = 0;
+    let chordAnchor = 0;
+    let inMeasure = false;
+    let inNote = false;
+    let inAttributes = false;
+    let inBackupForward = false;
+    let noteIsChord = false;
+    let noteIsRest = false;
+    let noteDuration = 0;
+    let currentNoteStart = 0;
+    let pendingTextConsumer: "duration" | null = null;
+    let lastTagEnd = 0;
+    let pendingAbsoluteStart: number | null = null;
+
+    let m: RegExpExecArray | null;
+    while ((m = tagRe.exec(segment)) !== null) {
+      const isClose = m[1] === "/";
+      const tagName = m[2].toLowerCase();
+      const attrs = m[3];
+      const tagPos = m.index;
+      const tagEnd = m.index + m[0].length;
+      const isSelfClose = attrs.trimEnd().endsWith("/");
+
+      if (pendingTextConsumer !== null && isClose) {
+        const text = segment.slice(lastTagEnd, tagPos).trim();
+        const val = Number(text);
+        if (pendingTextConsumer === "duration") {
+          if (inNote || inBackupForward) noteDuration = val;
+        }
+        pendingTextConsumer = null;
+      }
+      lastTagEnd = tagEnd;
+
+      if (isClose) {
+        if (tagName === "measure") {
+          inMeasure = false;
+          absoluteDiv += cursor;
+          cursor = 0;
+          chordAnchor = 0;
+        } else if (tagName === "note") {
+          if (pendingAbsoluteStart !== null && !noteIsRest) {
+            const key = `${partIndex}:${pendingAbsoluteStart}`;
+            const rules = targets.get(key);
+            if (rules && rules.size > 0) {
+              const color = chooseColorForRules(rules);
+              const noteOpenTag = segment.slice(currentNoteStart, segment.indexOf(">", currentNoteStart) + 1);
+              if (!/\scolor\s*=/.test(noteOpenTag)) {
+                const insertOffset = partContentStart + currentNoteStart + "<note".length;
+                insertions.push({ at: insertOffset, text: ` color="${color}"` });
+              }
+
+              if (!noteIsChord) {
+                const noteBody = segment.slice(currentNoteStart, tagPos);
+                if (!/<lyric\b/.test(noteBody)) {
+                  const lineStart = segment.lastIndexOf("\n", currentNoteStart) + 1;
+                  const noteIndent = segment.slice(lineStart, currentNoteStart).match(/^(\s*)/)?.[1] ?? "      ";
+                  const ruleNums = formatRuleNumberTag(rules);
+                  const lyricXml =
+                    `\n${noteIndent}  <lyric number=\"99\">\n` +
+                    `${noteIndent}    <syllabic>single</syllabic>\n` +
+                    `${noteIndent}    <text>R${ruleNums}</text>\n` +
+                    `${noteIndent}  </lyric>`;
+                  insertions.push({ at: partContentStart + tagPos, text: lyricXml });
+                }
+              }
+            }
+          }
+
+          if (!noteIsChord) {
+            chordAnchor = cursor;
+            cursor += noteDuration;
+          }
+
+          inNote = false;
+          noteIsChord = false;
+          noteIsRest = false;
+          noteDuration = 0;
+          pendingAbsoluteStart = null;
+        } else if (tagName === "attributes") {
+          inAttributes = false;
+        } else if (tagName === "backup") {
+          cursor -= noteDuration;
+          inBackupForward = false;
+          noteDuration = 0;
+        } else if (tagName === "forward") {
+          cursor += noteDuration;
+          inBackupForward = false;
+          noteDuration = 0;
+        }
+        continue;
+      }
+
+      if (!inMeasure && tagName === "measure") {
+        inMeasure = true;
+        continue;
+      }
+
+      if (inMeasure && !inNote && !inAttributes && !inBackupForward) {
+        if (tagName === "note") {
+          inNote = true;
+          noteIsChord = false;
+          noteIsRest = false;
+          noteDuration = 0;
+          currentNoteStart = tagPos;
+          pendingAbsoluteStart = absoluteDiv + cursor;
+          continue;
+        }
+        if (tagName === "attributes") {
+          inAttributes = true;
+          continue;
+        }
+        if (tagName === "backup" || tagName === "forward") {
+          inBackupForward = true;
+          noteDuration = 0;
+          continue;
+        }
+      }
+
+      if (inNote) {
+        if (tagName === "chord") {
+          noteIsChord = true;
+          pendingAbsoluteStart = absoluteDiv + chordAnchor;
+        }
+        if (tagName === "rest") noteIsRest = true;
+        if (tagName === "duration" && !isSelfClose) pendingTextConsumer = "duration";
+      }
+
+      if (inBackupForward && tagName === "duration" && !isSelfClose) {
+        pendingTextConsumer = "duration";
+      }
+    }
+  }
+
+  insertions.sort((a, b) => b.at - a.at);
+  let result = xmlText;
+  for (const ins of insertions) {
+    result = result.slice(0, ins.at) + ins.text + result.slice(ins.at);
+  }
+  return result;
+}
+
+function buildLegendDirectionsXml(entries: ColorLegendEntry[]): string {
+  const lines: string[] = [];
+  const titleY = 102;
+  const gridStartY = 84;
+  const rowHeight = 16;
+  const columns = 3;
+  const colWidth = 520;
+  const gridStartX = 18;
+
+  lines.push(
+    "    <direction placement=\"above\">\n" +
+      "      <direction-type>\n" +
+      `        <words default-x=\"10\" default-y=\"${titleY}\" font-weight=\"bold\" enclosure=\"rectangle\">Voice-Leading Flags (R# on notes = multiple rules)</words>\n` +
+      "      </direction-type>\n" +
+      "    </direction>\n",
+  );
+
+  for (let i = 0; i < entries.length; i += 1) {
+    const entry = entries[i];
+    const n = getRuleNumber(entry.rule);
+    const col = i % columns;
+    const row = Math.floor(i / columns);
+    const x = gridStartX + col * colWidth;
+    const y = gridStartY - row * rowHeight;
+
+    lines.push(
+      "    <direction placement=\"above\">\n" +
+        "      <direction-type>\n" +
+        `        <words default-x=\"${x}\" default-y=\"${y}\" relative-x=\"${x}\" color=\"${entry.color}\" font-weight=\"bold\" enclosure=\"rectangle\">${n}. [${colorNameFromHex(entry.color)}] ${entry.rule}</words>\n` +
+        "      </direction-type>\n" +
+        "    </direction>\n",
+    );
+  }
+
+  return lines.join("");
+}
+
+function insertLegendIntoFirstMeasure(xmlText: string, entries: ColorLegendEntry[]): string {
+  if (entries.length === 0) return xmlText;
+  const partOpen = /<part\s[^>]*id="([^"]+)"[^>]*>/;
+  const partMatch = partOpen.exec(xmlText);
+  if (!partMatch) return xmlText;
+
+  const partStart = partMatch.index + partMatch[0].length;
+  const partEnd = xmlText.indexOf("</part>", partStart);
+  if (partEnd === -1) return xmlText;
+
+  const partSegment = xmlText.slice(partStart, partEnd);
+  const measureOpen = /<measure\b[^>]*>/;
+  const measureMatch = measureOpen.exec(partSegment);
+  if (!measureMatch) return xmlText;
+
+  const insertAt = partStart + measureMatch.index + measureMatch[0].length;
+  const legendXml = "\n" + buildLegendDirectionsXml(entries);
+  return xmlText.slice(0, insertAt) + legendXml + xmlText.slice(insertAt);
+}
+
+function formatAnalysisReport(
+  violations: VoiceLeadingViolation[],
+  inputPath: string,
+): string {
+  const header = [
+    "Voice Leading Analysis",
+    "======================",
+    `Source: ${path.basename(inputPath)}`,
+    `Rules: Piston (1948), Kostka & Payne (2004), Wikipedia – Voice leading`,
+    "",
+  ];
+
+  if (violations.length === 0) {
+    return [...header, "No baroque voice-leading violations found.", ""].join("\n");
+  }
+
+  const ruleGroups = new Map<string, VoiceLeadingViolation[]>();
+  for (const v of violations) {
+    if (!ruleGroups.has(v.rule)) ruleGroups.set(v.rule, []);
+    ruleGroups.get(v.rule)!.push(v);
+  }
+
+  const lines: string[] = [...header];
+  for (const [rule, group] of ruleGroups) {
+    lines.push(`── ${rule} (${group.length}) ──`);
+    for (const v of group) {
+      lines.push(
+        `  m.${String(v.measure).padEnd(4)} beat ${String(v.beat.toFixed(2)).padEnd(6)}` +
+        `  ${v.voiceNames.padEnd(42)}  ${v.detail}`,
+      );
+    }
+    lines.push("");
+  }
+
+  lines.push(`Total violations: ${violations.length}`);
+  lines.push("");
+  return lines.join("\n");
+}
+
+function main() {
+  const { input, out, bassPartId, analyze, analyzeOnly, analyzeOut, exportPdf, pdfOut, pdfCmd } = parseArgs(process.argv);
+
+  const xmlText = normalizeXmlText(fs.readFileSync(input, "utf8"));
   const score = parseScore(xmlText);
   const parts = asArray(score.part);
 
@@ -1288,38 +2182,80 @@ function main() {
   }
 
   const allEvents = parts.map((part) => extractPartEvents(part));
-  const bassPartIndex = findBassPartIndex(allEvents);
+  const bassPartIndex = resolveBassPartIndex(allEvents, xmlText, bassPartId);
   const divisions = extractDivisions(score); // ticks per quarter note
+  const partNames = getPartNames(xmlText, parts.length);
   const figures = inferFigures(allEvents, divisions); // minimum segment = 1 quarter note
 
   const hasExistingFiguredBass = xmlText.includes("<figured-bass>");
   let existing: ExistingFigureEvent[] = [];
   let sourceXmlForInsert = xmlText;
   let changes: FigureChange[] = [];
+  let removedFromOtherStaves = 0;
 
   if (hasExistingFiguredBass) {
     const reviewed = collectAndStripExistingFiguredBass(xmlText, bassPartIndex);
     existing = reviewed.existing;
-    sourceXmlForInsert = reviewed.strippedXml;
-    changes = buildFigureChangeReport(figures, existing);
+
+    // Remove figured bass from all staves so output contains figures on exactly one selected part.
+    const globallyStripped = stripAllFiguredBass(reviewed.strippedXml);
+    sourceXmlForInsert = globallyStripped.strippedXml;
+    removedFromOtherStaves = globallyStripped.removedCount;
+
+    // If selected bass had no pre-existing figures, skip noisy "added missing" entries.
+    changes = buildFigureChangeReport(figures, existing, existing.length > 0);
   }
 
   const outputXml = insertFiguredBass(sourceXmlForInsert, figures, bassPartIndex, true);
-  fs.writeFileSync(out, outputXml, "utf8");
+  if (!analyzeOnly) {
+    fs.writeFileSync(out, outputXml, "utf8");
+    if (exportPdf) {
+      exportMusicXmlToPdf(out, pdfOut, pdfCmd);
+    }
+  }
 
   console.log(`Input:  ${input}`);
-  console.log(`Output: ${out}`);
+  if (!analyzeOnly) console.log(`Output: ${out}`);
+  if (!analyzeOnly && exportPdf) console.log(`PDF:    ${pdfOut}`);
+  console.log(`Bass part: ${getBassPartId(xmlText, bassPartIndex)}`);
   console.log(`Figure events:    ${figures.length}`);
   console.log(`Non-trivial figures: ${figures.filter((f) => f.slots.length > 0).length}`);
   if (hasExistingFiguredBass) {
     console.log(`Existing figured-bass entries reviewed: ${existing.length}`);
-    if (changes.length === 0) {
+    if (removedFromOtherStaves > 0) {
+      console.log(`Removed existing figured-bass blocks from non-selected staves: ${removedFromOtherStaves}`);
+    }
+    if (changes.length === 0 && removedFromOtherStaves === 0) {
       console.log("Verification: existing figured bass matched inferred analysis (no updates needed).");
+    } else if (changes.length === 0 && removedFromOtherStaves > 0) {
+      console.log("Verification: kept figures on one selected staff only.");
     } else {
       console.log("Verification: updated figured bass at:");
       for (const change of changes) {
         console.log(`  Measure ${change.measure}: ${change.reason}`);
       }
+    }
+  }
+
+  if (analyze) {
+    const violations = analyzeVoiceLeading(allEvents, partNames, bassPartIndex);
+    if (!analyzeOnly) {
+      const coloredXml = colorVoiceLeadingViolations(outputXml, violations);
+      const usedRules = new Set(violations.map((v) => v.rule));
+      const legendEntries = RULE_COLOR_SCHEME.filter((e) => usedRules.has(e.rule));
+      const withLegendXml = insertLegendIntoFirstMeasure(coloredXml, legendEntries);
+      fs.writeFileSync(out, withLegendXml, "utf8");
+    }
+    const report = formatAnalysisReport(violations, input);
+    if (analyzeOut) {
+      fs.writeFileSync(analyzeOut, report, "utf8");
+      // Also output JSON for report generation
+      const jsonOut = analyzeOut.replace(/\.txt$/, ".json");
+      fs.writeFileSync(jsonOut, JSON.stringify({ input, violations }, null, 2), "utf8");
+      console.log(`Voice leading report: ${analyzeOut} (${violations.length} violation${violations.length !== 1 ? "s" : ""})`);
+    } else {
+      console.log("");
+      process.stdout.write(report);
     }
   }
 }
