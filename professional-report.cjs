@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { spawnSync } = require('child_process');
 const PDFDocument = require('pdfkit');
 
 // Color scheme matching the analysis
@@ -29,6 +30,33 @@ const RULE_EXPLANATIONS = {
   "Large leap": "A leap of 10+ semitones should be filled in by stepwise motion in the opposite direction.",
   "Leading tone unresolved": "The leading tone (7th scale degree) should resolve upward to the tonic.",
 };
+
+const RULE_NUMBER_ORDER = [
+  'Parallel P5ths',
+  'Parallel octaves',
+  'Parallel unisons',
+  'Direct octaves',
+  'Direct 5ths',
+  'Voice crossing',
+  'Augmented 2nd',
+  'Melodic tritone',
+  'Large leap',
+  'Leading tone unresolved',
+];
+
+function getRuleNumber(rule) {
+  const idx = RULE_NUMBER_ORDER.indexOf(rule);
+  return idx >= 0 ? idx + 1 : 0;
+}
+
+function sortedBrokenRuleEntries(byRule) {
+  return Object.entries(byRule).sort((a, b) => {
+    const aNum = getRuleNumber(a[0]);
+    const bNum = getRuleNumber(b[0]);
+    if (aNum !== bNum) return aNum - bNum;
+    return a[0].localeCompare(b[0]);
+  });
+}
 
 function createProfessionalReport(jsonPath, outputPath) {
   // Read violations JSON
@@ -70,52 +98,57 @@ function createProfessionalReport(jsonPath, outputPath) {
   doc.text(`Total Violations: ${violations.length}`);
   doc.text(`Rules Violated: ${Object.keys(byRule).length}`);
 
-  doc.moveDown(0.8);
+  const brokenRuleEntries = sortedBrokenRuleEntries(byRule);
+  if (brokenRuleEntries.length > 0) {
+    doc.moveDown(0.8);
 
-  // Color legend - simplified layout
-  doc.fontSize(11).font('Helvetica-Bold').text('Color Legend', { underline: true });
-  doc.moveDown(0.4);
+    // Color legend - only broken rules, ordered by stable rule number.
+    doc.fontSize(11).font('Helvetica-Bold').text('Color Legend', { underline: true });
+    doc.moveDown(0.4);
 
-  doc.fontSize(8).font('Helvetica');
-  const sortedRules = Object.entries(byRule).sort((a, b) => b[1].length - a[1].length);
-  
-  // Two-column legend
-  const midpoint = Math.ceil(sortedRules.length / 2);
-  const leftCol = sortedRules.slice(0, midpoint);
-  const rightCol = sortedRules.slice(midpoint);
-  
-  const legendStartY = doc.y;
-  
-  leftCol.forEach(([rule, viols], idx) => {
-    const color = RULE_COLORS[rule] || { hex: '#808080' };
-    doc.rect(40, legendStartY + idx * 14, 10, 10).fill(color.hex);
-    doc.fillColor('black');
-    doc.fontSize(8).font('Helvetica').text(`${rule} (${viols.length})`, 55, legendStartY + idx * 14 + 1, { width: 200 });
-  });
-  
-  rightCol.forEach(([rule, viols], idx) => {
-    const color = RULE_COLORS[rule] || { hex: '#808080' };
-    doc.rect(280, legendStartY + idx * 14, 10, 10).fill(color.hex);
-    doc.fillColor('black');
-    doc.fontSize(8).font('Helvetica').text(`${rule} (${viols.length})`, 295, legendStartY + idx * 14 + 1, { width: 200 });
-  });
-  
-  doc.moveDown(Math.max(leftCol.length, rightCol.length) * 0.5 + 0.5);
+    doc.fontSize(8).font('Helvetica');
 
-  // New page for violations
-  doc.addPage();
-  doc.fontSize(13).font('Helvetica-Bold').text('Detailed Violations', { underline: true });
-  doc.moveDown(0.5);
+    // Two-column legend
+    const midpoint = Math.ceil(brokenRuleEntries.length / 2);
+    const leftCol = brokenRuleEntries.slice(0, midpoint);
+    const rightCol = brokenRuleEntries.slice(midpoint);
 
-  // List violations by rule
-  Object.entries(byRule)
-    .sort((a, b) => b[1].length - a[1].length) // Sort by count descending
-    .forEach(([rule, viols]) => {
+    const legendStartY = doc.y;
+
+    leftCol.forEach(([rule, viols], idx) => {
+      const color = RULE_COLORS[rule] || { hex: '#808080' };
+      const num = getRuleNumber(rule);
+      const label = num > 0 ? `${num}. ${rule} (${viols.length})` : `${rule} (${viols.length})`;
+      doc.rect(40, legendStartY + idx * 14, 10, 10).fill(color.hex);
+      doc.fillColor('black');
+      doc.fontSize(8).font('Helvetica').text(label, 55, legendStartY + idx * 14 + 1, { width: 210 });
+    });
+
+    rightCol.forEach(([rule, viols], idx) => {
+      const color = RULE_COLORS[rule] || { hex: '#808080' };
+      const num = getRuleNumber(rule);
+      const label = num > 0 ? `${num}. ${rule} (${viols.length})` : `${rule} (${viols.length})`;
+      doc.rect(280, legendStartY + idx * 14, 10, 10).fill(color.hex);
+      doc.fillColor('black');
+      doc.fontSize(8).font('Helvetica').text(label, 295, legendStartY + idx * 14 + 1, { width: 210 });
+    });
+
+    doc.moveDown(Math.max(leftCol.length, rightCol.length) * 0.5 + 0.5);
+
+    // New page for violations
+    doc.addPage();
+    doc.fontSize(13).font('Helvetica-Bold').text('Detailed Violations', { underline: true });
+    doc.moveDown(0.5);
+
+    // List violations by rule (only broken rules)
+    brokenRuleEntries.forEach(([rule, viols]) => {
       const color = RULE_COLORS[rule] || { rgb: [128, 128, 128] };
+      const num = getRuleNumber(rule);
+      const heading = num > 0 ? `${num}. ${rule} (${viols.length})` : `${rule} (${viols.length})`;
       
       // Rule header
       doc.fontSize(10).font('Helvetica-Bold').fillColor(color.rgb[0], color.rgb[1], color.rgb[2]);
-      doc.text(`${rule} (${viols.length})`, { underline: true });
+      doc.text(heading, { underline: true });
       doc.fillColor('black');
       doc.moveDown(0.2);
 
@@ -143,27 +176,19 @@ function createProfessionalReport(jsonPath, outputPath) {
       }
     });
 
-  // Rules reference page
-  doc.addPage();
-  doc.fontSize(13).font('Helvetica-Bold').text('Rules Reference', { underline: true });
-  doc.moveDown(0.5);
+    // Rules reference page (broken rules only)
+    doc.addPage();
+    doc.fontSize(13).font('Helvetica-Bold').text('Rules Reference', { underline: true });
+    doc.moveDown(0.5);
 
-  doc.fontSize(9).font('Helvetica');
-  const rulesList = [
-    ['Parallel perfect intervals', 'Two or more voices moving in parallel into a perfect 5th or octave undermines voice independence.'],
-    ['Parallel unison', 'Similar motion leading to unison eliminates register distinction.'],
-    ['Direct intervals (outer voices)', 'Similar motion into a perfect interval in the outer voices, especially with soprano leap.'],
-    ['Voice crossing', 'Outer voices exchange registers, creating confusion in the texture.'],
-    ['Melodic intervals', 'Augmented 2nds and tritones are awkward in a single voice.'],
-    ['Large leaps', 'Leaps ≥10 semitones should be filled in by stepwise opposite motion.'],
-    ['Leading tone resolution', 'The 7th scale degree should resolve up to the tonic.'],
-  ];
-
-  rulesList.forEach(([name, desc]) => {
-    doc.fontSize(9).font('Helvetica-Bold').text(name);
-    doc.fontSize(8).font('Helvetica').text(desc, { width: 500 });
-    doc.moveDown(0.3);
-  });
+    brokenRuleEntries.forEach(([rule]) => {
+      const num = getRuleNumber(rule);
+      const heading = num > 0 ? `${num}. ${rule}` : rule;
+      doc.fontSize(9).font('Helvetica-Bold').text(heading);
+      doc.fontSize(8).font('Helvetica').text(RULE_EXPLANATIONS[rule] || '', { width: 500 });
+      doc.moveDown(0.3);
+    });
+  }
 
   doc.end();
 
@@ -173,19 +198,103 @@ function createProfessionalReport(jsonPath, outputPath) {
   });
 }
 
+function findMuseScoreExecutable() {
+  const candidates = [
+    process.env.MUSESCORE_CMD,
+    '/Applications/MuseScore 4.app/Contents/MacOS/mscore',
+    '/Applications/MuseScore 3.app/Contents/MacOS/mscore',
+    'mscore',
+    'musescore',
+  ].filter(Boolean);
+
+  for (const cmd of candidates) {
+    const probe = spawnSync(cmd, ['--version'], { encoding: 'utf8' });
+    if (!probe.error && probe.status === 0) {
+      return cmd;
+    }
+  }
+
+  return '';
+}
+
+function guessColoredXmlPath(jsonPath, inputPath) {
+  const dir = path.dirname(jsonPath);
+  const jsonBase = path.basename(jsonPath, '.json');
+  const inputBase = path.basename(inputPath || '', path.extname(inputPath || ''));
+
+  const candidates = [
+    `${jsonBase.replace(/-strict-report$/i, '-colored-strict')}.musicxml`,
+    `${jsonBase.replace(/-fugal-report$/i, '-colored-fugal')}.musicxml`,
+    `${jsonBase.replace(/-report$/i, '-colored')}.musicxml`,
+    `${inputBase}-colored-strict.musicxml`,
+    `${inputBase}-colored-fugal.musicxml`,
+    `${inputBase}-colored.musicxml`,
+  ]
+    .filter((name) => name && !name.startsWith('-'))
+    .map((name) => path.join(dir, name));
+
+  for (const filePath of candidates) {
+    if (fs.existsSync(filePath)) {
+      return filePath;
+    }
+  }
+
+  return '';
+}
+
+function renderColoredWithMuseScore(xmlPath, pdfPath) {
+  const musescoreCmd = findMuseScoreExecutable();
+  if (!musescoreCmd) {
+    throw new Error(
+      'MuseScore CLI not found. Install MuseScore or set MUSESCORE_CMD to the executable path.',
+    );
+  }
+
+  const result = spawnSync(musescoreCmd, [xmlPath, '-o', pdfPath], { encoding: 'utf8' });
+  if (result.error || result.status !== 0) {
+    const stderr = (result.stderr || '').trim();
+    const stdout = (result.stdout || '').trim();
+    const detail = stderr || stdout || (result.error ? result.error.message : 'unknown error');
+    throw new Error(`MuseScore render failed: ${detail}`);
+  }
+
+  if (!fs.existsSync(pdfPath)) {
+    throw new Error(`MuseScore reported success but output was not created: ${pdfPath}`);
+  }
+}
+
 async function main() {
   const jsonPath = process.argv[2];
   const outputPath = process.argv[3] || jsonPath.replace(/\.json$/, '-report.pdf');
+  const coloredXmlPathArg = process.argv[4] || '';
+  const coloredPdfPath = process.argv[5] || outputPath.replace(/\.pdf$/i, '-colored-score.pdf');
 
   if (!jsonPath || !fs.existsSync(jsonPath)) {
-    console.error('Usage: node professional-report.cjs violations.json [output.pdf]');
+    console.error(
+      'Usage: node professional-report.cjs violations.json [output.pdf] [colored.musicxml] [colored-output.pdf]',
+    );
     process.exit(1);
+  }
+
+  const parsed = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
+  const resolvedColoredXmlPath =
+    coloredXmlPathArg || guessColoredXmlPath(jsonPath, parsed.input);
+
+  if (!resolvedColoredXmlPath || !fs.existsSync(resolvedColoredXmlPath)) {
+    throw new Error(
+      'Colored MusicXML not found. Pass it explicitly as the 3rd argument, or generate it first with --analyze.',
+    );
   }
 
   console.log(`Reading violations from ${jsonPath}...`);
   await createProfessionalReport(jsonPath, outputPath);
   const stats = fs.statSync(outputPath);
   console.log(`✅ Created ${outputPath} (${(stats.size / 1024).toFixed(1)} KB)`);
+
+  console.log(`Rendering colored score with MuseScore from ${resolvedColoredXmlPath}...`);
+  renderColoredWithMuseScore(resolvedColoredXmlPath, coloredPdfPath);
+  const coloredStats = fs.statSync(coloredPdfPath);
+  console.log(`✅ Created ${coloredPdfPath} (${(coloredStats.size / 1024).toFixed(1)} KB)`);
 }
 
 main().catch(err => {

@@ -89,7 +89,7 @@ function parseArgs(argv: string[]) {
   const args = argv.slice(2);
   if (args.length === 0) {
     throw new Error(
-      "Usage: npm run start -- <input.musicxml> [--out output.musicxml] [--bass-part-id P4] [--analyze] [--analyze-only] [--analyze-out report.txt] [--pdf] [--pdf-out output.pdf] [--pdf-cmd command]",
+      "Usage: npm run start -- <input.musicxml> [--out output.musicxml] [--bass-part-id P4] [--analyze] [--analyze-only] [--analyze-out report.txt] [--fugal] [--pdf] [--pdf-out output.pdf] [--pdf-cmd command]",
     );
   }
 
@@ -99,6 +99,7 @@ function parseArgs(argv: string[]) {
   let analyze = false;
   let analyzeOnly = false;
   let analyzeOut = "";
+  let fugal = false;
   let exportPdf = false;
   let pdfOut = "";
   let pdfCmd = "";
@@ -124,6 +125,11 @@ function parseArgs(argv: string[]) {
       analyzeOut = args[i + 1] ?? "";
       analyze = true;
       i += 1;
+      continue;
+    }
+    if (token === "--fugal") {
+      fugal = true;
+      analyze = true;
       continue;
     }
     if (token === "--pdf") {
@@ -165,7 +171,7 @@ function parseArgs(argv: string[]) {
     throw new Error("--pdf cannot be used with --analyze-only because no score output file is written.");
   }
 
-  return { input, out, bassPartId, analyze, analyzeOnly, analyzeOut, exportPdf, pdfOut, pdfCmd };
+  return { input, out, bassPartId, analyze, analyzeOnly, analyzeOut, fugal, exportPdf, pdfOut, pdfCmd };
 }
 
 function pickPdfCommand(explicitCmd: string): string {
@@ -453,7 +459,52 @@ function sumDurations(items: any[]): number {
   }, 0);
 }
 
-function extractPartEvents(part: any): NoteEvent[] {
+function parseMeasureNumber(raw: unknown, fallback: number): number {
+  const n = Number(raw ?? "");
+  return Number.isFinite(n) ? n : fallback;
+}
+
+function measureDurationDiv(measure: any): number {
+  const notes = asArray(measure.note);
+  const forwardTotal = sumDurations(asArray(measure.forward));
+  const backupTotal = sumDurations(asArray(measure.backup));
+
+  let cursor = 0;
+  for (const note of notes) {
+    const isChord = Boolean(note.chord);
+    const duration = Number(note.duration ?? 0);
+    if (!isChord) cursor += duration;
+  }
+  cursor += forwardTotal - backupTotal;
+  return Math.max(0, cursor);
+}
+
+function buildMeasureStartMap(parts: any[]): Map<number, number> {
+  const durationByMeasure = new Map<number, number>();
+
+  for (const part of parts) {
+    const measures = asArray(part.measure);
+    for (let m = 0; m < measures.length; m += 1) {
+      const measure = measures[m];
+      const measureNumber = parseMeasureNumber(measure["@_number"], m + 1);
+      const duration = measureDurationDiv(measure);
+      const prev = durationByMeasure.get(measureNumber) ?? 0;
+      if (duration > prev) durationByMeasure.set(measureNumber, duration);
+    }
+  }
+
+  const orderedMeasureNumbers = [...durationByMeasure.keys()].sort((a, b) => a - b);
+  const startByMeasure = new Map<number, number>();
+  let runningStart = 0;
+  for (const n of orderedMeasureNumbers) {
+    startByMeasure.set(n, runningStart);
+    runningStart += durationByMeasure.get(n) ?? 0;
+  }
+
+  return startByMeasure;
+}
+
+function extractPartEvents(part: any, measureStartMap?: Map<number, number>): NoteEvent[] {
   const measures = asArray(part.measure);
   const events: NoteEvent[] = [];
 
@@ -466,6 +517,8 @@ function extractPartEvents(part: any): NoteEvent[] {
 
   for (let m = 0; m < measures.length; m += 1) {
     const measure = measures[m];
+    const measureNumber = parseMeasureNumber(measure["@_number"], m + 1);
+    const measureStart = measureStartMap?.get(measureNumber) ?? absoluteDiv;
     divisions = readDivisions(measure, divisions);
 
     // Track key signature changes
@@ -514,17 +567,16 @@ function extractPartEvents(part: any): NoteEvent[] {
           const stepIndex = STEP_TO_INDEX[step];
           const degreeAbs = octave * 7 + stepIndex + transposeDiatonic + transposeOctave * 7;
 
-          const parsedMeasure = Number(measure["@_number"] ?? "");
           events.push({
-            start: absoluteDiv + localStart,
-            end: absoluteDiv + localStart + duration,
+            start: measureStart + localStart,
+            end: measureStart + localStart + duration,
             midi,
             step,
             alter,
             stepIndex,
             degreeAbs,
             keyFifths,
-            measure: Number.isFinite(parsedMeasure) ? parsedMeasure : m + 1,
+            measure: measureNumber,
             beat: localStart / divisions + 1,
             tieStart,
             tieStop,
@@ -542,8 +594,7 @@ function extractPartEvents(part: any): NoteEvent[] {
     // absolute time stays aligned across parts.
     cursor += forwardTotal - backupTotal;
     if (cursor < 0) cursor = 0;
-
-    absoluteDiv += cursor;
+    absoluteDiv = measureStart + cursor;
   }
 
   return events;
@@ -1598,7 +1649,9 @@ function analyzeVoiceLeading(
   allPartEvents: NoteEvent[][],
   partNames: string[],
   bassPartIndex: number,
+  opts?: { fugal?: boolean },
 ): VoiceLeadingViolation[] {
+  const fugalMode = Boolean(opts?.fugal);
   const violations: VoiceLeadingViolation[] = [];
   const numParts = allPartEvents.length;
 
@@ -1631,6 +1684,30 @@ function analyzeVoiceLeading(
   const times = [...allAttacks].sort((a, b) => a - b);
 
   // ── Rule helpers ─────────────────────────────────────────────────────────
+  function isMelodicStep(a: NoteEvent, b: NoteEvent): boolean {
+    if (a.start === b.start) return false;
+    const semitones = Math.abs(b.midi - a.midi);
+    return semitones > 0 && semitones <= 2;
+  }
+
+  function resolvesToTonicStepwise(
+    notes: NoteEvent[],
+    ltIndex: number,
+    tonicPc: number,
+  ): boolean {
+    let last = notes[ltIndex];
+    const maxIndex = Math.min(notes.length - 1, ltIndex + 3);
+
+    for (let j = ltIndex + 1; j <= maxIndex; j += 1) {
+      const n = notes[j];
+      if (n.start === last.start) continue;
+      if (!isMelodicStep(last, n)) return false;
+      if ((n.midi % 12) === tonicPc) return true;
+      last = n;
+    }
+    return false;
+  }
+
   function push(
     rule: string,
     measure: number,
@@ -1671,8 +1748,13 @@ function analyzeVoiceLeading(
             const bothMoved = prevA.midi !== curA.midi && prevB.midi !== curB.midi;
 
             if (bothMoved) {
+              const dirA = Math.sign(curA.midi - prevA.midi);
+              const dirB = Math.sign(curB.midi - prevB.midi);
+              const similarMotion = dirA !== 0 && dirA === dirB;
+
               // Rule 1: Parallel perfect fifths
               if (
+                similarMotion &&
                 isPerfectFifth(prevA.midi, prevB.midi, prevA.degreeAbs, prevB.degreeAbs) &&
                 isPerfectFifth(curA.midi, curB.midi, curA.degreeAbs, curB.degreeAbs)
               ) {
@@ -1692,7 +1774,11 @@ function analyzeVoiceLeading(
               }
 
               // Rule 2: Parallel perfect octaves
-              if (isPerfectOctave(prevA.midi, prevB.midi) && isPerfectOctave(curA.midi, curB.midi)) {
+              if (
+                similarMotion &&
+                isPerfectOctave(prevA.midi, prevB.midi) &&
+                isPerfectOctave(curA.midi, curB.midi)
+              ) {
                 const n = aAttacked ? curA : curB;
                 push("Parallel octaves", n.measure, n.beat,
                   n.start,
@@ -1709,7 +1795,7 @@ function analyzeVoiceLeading(
               }
 
               // Rule 3: Parallel unisons
-              if (prevA.midi === prevB.midi && curA.midi === curB.midi) {
+              if (similarMotion && prevA.midi === prevB.midi && curA.midi === curB.midi) {
                 const n = aAttacked ? curA : curB;
                 push("Parallel unisons", n.measure, n.beat,
                   n.start,
@@ -1845,7 +1931,17 @@ function analyzeVoiceLeading(
           const fifth = (tonic + 7) % 12;
           const resolvedUp = (curr.midi % 12) === tonic;
           const innerVoiceException = p !== sopranoIndex && (curr.midi % 12) === fifth;
-          if (!resolvedUp && !innerVoiceException) {
+
+          let fugalLineException = false;
+          if (fugalMode && !resolvedUp && !innerVoiceException) {
+            // In fugue texture, allow stepwise linear motion through the leading tone.
+            // This avoids false positives on subject/answer lines and scalar passages.
+            const exitsByStep = isMelodicStep(prev, curr);
+            const delayedStepResolution = resolvesToTonicStepwise(notes, i - 1, tonic);
+            fugalLineException = exitsByStep || delayedStepResolution;
+          }
+
+          if (!resolvedUp && !innerVoiceException && !fugalLineException) {
             push("Leading tone unresolved", prev.measure, prev.beat,
               prev.start,
               [p],
@@ -1895,6 +1991,10 @@ function colorVoiceLeadingViolations(
 ): string {
   if (violations.length === 0) return xmlText;
 
+  const parsed = parseScore(xmlText);
+  const parsedParts = asArray(parsed.part);
+  const measureStartMap = buildMeasureStartMap(parsedParts);
+
   const partIds = getPartIdsInOrder(xmlText);
   const targets = new Map<string, Set<string>>();
 
@@ -1933,6 +2033,7 @@ function colorVoiceLeadingViolations(
     const tagRe = /<(\/?)(\w[\w.-]*)([^>]*)>/g;
 
     let absoluteDiv = 0;
+    let currentMeasureStart = 0;
     let cursor = 0;
     let chordAnchor = 0;
     let inMeasure = false;
@@ -1969,7 +2070,7 @@ function colorVoiceLeadingViolations(
       if (isClose) {
         if (tagName === "measure") {
           inMeasure = false;
-          absoluteDiv += cursor;
+          absoluteDiv = currentMeasureStart + cursor;
           cursor = 0;
           chordAnchor = 0;
         } else if (tagName === "note") {
@@ -2027,6 +2128,9 @@ function colorVoiceLeadingViolations(
 
       if (!inMeasure && tagName === "measure") {
         inMeasure = true;
+        const numMatch = attrs.match(/\bnumber="([^"]+)"/);
+        const measureNumber = parseMeasureNumber(numMatch?.[1], 0);
+        currentMeasureStart = measureStartMap.get(measureNumber) ?? absoluteDiv;
         continue;
       }
 
@@ -2037,7 +2141,7 @@ function colorVoiceLeadingViolations(
           noteIsRest = false;
           noteDuration = 0;
           currentNoteStart = tagPos;
-          pendingAbsoluteStart = absoluteDiv + cursor;
+          pendingAbsoluteStart = currentMeasureStart + cursor;
           continue;
         }
         if (tagName === "attributes") {
@@ -2054,7 +2158,7 @@ function colorVoiceLeadingViolations(
       if (inNote) {
         if (tagName === "chord") {
           noteIsChord = true;
-          pendingAbsoluteStart = absoluteDiv + chordAnchor;
+          pendingAbsoluteStart = currentMeasureStart + chordAnchor;
         }
         if (tagName === "rest") noteIsRest = true;
         if (tagName === "duration" && !isSelfClose) pendingTextConsumer = "duration";
@@ -2174,7 +2278,7 @@ function formatAnalysisReport(
 }
 
 function main() {
-  const { input, out, bassPartId, analyze, analyzeOnly, analyzeOut, exportPdf, pdfOut, pdfCmd } = parseArgs(process.argv);
+  const { input, out, bassPartId, analyze, analyzeOnly, analyzeOut, fugal, exportPdf, pdfOut, pdfCmd } = parseArgs(process.argv);
 
   const xmlText = normalizeXmlText(fs.readFileSync(input, "utf8"));
   const score = parseScore(xmlText);
@@ -2184,7 +2288,8 @@ function main() {
     throw new Error("Need at least two parts (bass + harmony) to infer figures.");
   }
 
-  const allEvents = parts.map((part) => extractPartEvents(part));
+  const measureStartMap = buildMeasureStartMap(parts);
+  const allEvents = parts.map((part) => extractPartEvents(part, measureStartMap));
   const bassPartIndex = resolveBassPartIndex(allEvents, xmlText, bassPartId);
   const divisions = extractDivisions(score); // ticks per quarter note
   const partNames = getPartNames(xmlText, parts.length);
@@ -2241,7 +2346,7 @@ function main() {
   }
 
   if (analyze) {
-    const violations = analyzeVoiceLeading(allEvents, partNames, bassPartIndex);
+    const violations = analyzeVoiceLeading(allEvents, partNames, bassPartIndex, { fugal });
     if (!analyzeOnly) {
       const coloredXml = colorVoiceLeadingViolations(outputXml, violations);
       const usedRules = new Set(violations.map((v) => v.rule));

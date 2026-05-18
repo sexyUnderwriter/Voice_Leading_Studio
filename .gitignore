@@ -12,6 +12,10 @@ test-*.json
 # Generated text/json analysis reports
 *analysis-report.txt
 *analysis-report.json
+*.txt
+*.json
+*.mid
+
 
 # Generated PDFs from render/merge pipeline
 fugue-colored.pdf
