@@ -6,11 +6,14 @@
   "description": "Generate figured-bass figures from harmonized MusicXML with an unfigured bass line.",
   "scripts": {
     "start": "tsx src/index.ts",
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc -p tsconfig.json",
+    "web": "node web/server.mjs"
   },
   "dependencies": {
     "canvas": "^3.2.3",
+    "express": "^5.2.1",
     "fast-xml-parser": "^5.7.3",
+    "multer": "^2.1.1",
     "pdfkit": "^0.18.0",
     "svg2pdf": "^1.1.1",
     "verovio": "^6.1.0"

@@ -1,0 +1,243 @@
+:root {
+  --bg: #f5efe1;
+  --ink: #1f2a30;
+  --accent: #9c1c1c;
+  --accent-soft: #d18f3e;
+  --panel: rgba(255, 250, 240, 0.88);
+  --border: rgba(70, 45, 34, 0.22);
+  --ok: #166534;
+  --warn: #8b1e3f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: "Avenir Next", "Gill Sans", "Trebuchet MS", sans-serif;
+  background: radial-gradient(circle at 20% 10%, #fff8e8 0%, var(--bg) 45%, #e6dcc7 100%);
+}
+
+.bg-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.bg-grid {
+  opacity: 0.18;
+  background-image: linear-gradient(to right, rgba(58, 45, 35, 0.14) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(58, 45, 35, 0.14) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.bg-orb {
+  background: radial-gradient(circle at 80% 0%, rgba(193, 72, 20, 0.25), transparent 35%),
+    radial-gradient(circle at 15% 75%, rgba(39, 94, 120, 0.2), transparent 40%);
+}
+
+.shell {
+  width: min(920px, 92vw);
+  margin: 2rem auto;
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 1.2rem;
+}
+
+.hero h1 {
+  margin: 0.2rem 0;
+  font-size: clamp(2rem, 4.4vw, 3.6rem);
+  letter-spacing: 0.02em;
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+}
+
+.eyebrow {
+  letter-spacing: 0.2em;
+  font-weight: 700;
+  margin: 0;
+  color: #7e2a1e;
+  font-size: 0.75rem;
+}
+
+.subhead {
+  max-width: 68ch;
+  margin: 0;
+  opacity: 0.88;
+}
+
+.panel {
+  backdrop-filter: blur(4px);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
+  box-shadow: 0 10px 28px rgba(50, 34, 24, 0.13);
+}
+
+.preview-panel {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.preview-header {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: end;
+  flex-wrap: wrap;
+}
+
+.preview-header h2 {
+  margin: 0;
+}
+
+.preview-header p {
+  margin: 0.25rem 0 0;
+  opacity: 0.82;
+}
+
+.preview-select {
+  min-width: min(100%, 320px);
+  display: grid;
+  gap: 0.35rem;
+}
+
+.preview-select span {
+  font-weight: 700;
+}
+
+.preview-select select {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid rgba(91, 62, 48, 0.28);
+  padding: 0.7rem 0.8rem;
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--ink);
+}
+
+.preview-panel iframe {
+  width: 100%;
+  min-height: 74vh;
+  border: 1px solid rgba(80, 57, 46, 0.2);
+  border-radius: 12px;
+  background: #fffdf7;
+}
+
+.field {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.field span {
+  font-weight: 700;
+}
+
+input[type="file"] {
+  border: 1px dashed rgba(90, 57, 45, 0.45);
+  border-radius: 10px;
+  padding: 0.6rem;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.grid.two-col {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 1rem;
+}
+
+fieldset {
+  border: 1px solid rgba(91, 62, 48, 0.3);
+  border-radius: 10px;
+  display: grid;
+  gap: 0.6rem;
+  padding: 0.8rem;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+legend {
+  font-weight: 700;
+  padding: 0 0.25rem;
+}
+
+label {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+button {
+  margin-top: 1rem;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.75rem 1.2rem;
+  background: linear-gradient(135deg, var(--accent), #c04700 60%, var(--accent-soft));
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 220ms ease;
+}
+
+button:hover {
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: 0 8px 18px rgba(145, 46, 20, 0.34);
+}
+
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+#statusText {
+  margin: 0;
+  font-weight: 600;
+}
+
+#statusText.ok {
+  color: var(--ok);
+}
+
+#statusText.error {
+  color: var(--warn);
+}
+
+ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+li + li {
+  margin-top: 0.35rem;
+}
+
+a {
+  color: #0f4573;
+  text-decoration-thickness: 1.5px;
+}
+
+pre {
+  max-height: 260px;
+  overflow: auto;
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: 1px solid rgba(40, 30, 26, 0.2);
+  background: rgba(35, 30, 26, 0.86);
+  color: #f8ecda;
+  font-family: "IBM Plex Mono", "Menlo", "Consolas", monospace;
+  font-size: 0.84rem;
+}
+
+@media (max-width: 740px) {
+  .grid.two-col {
+    grid-template-columns: 1fr;
+  }
+
+  .shell {
+    margin: 1rem auto 1.8rem;
+  }
+}

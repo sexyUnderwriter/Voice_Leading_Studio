@@ -29,7 +29,7 @@ function asArray(value) {
 function parseArgs(argv) {
     const args = argv.slice(2);
     if (args.length === 0) {
-        throw new Error("Usage: npm run start -- <input.musicxml> [--out output.musicxml] [--bass-part-id P4] [--analyze] [--analyze-only] [--analyze-out report.txt] [--fugal] [--pdf] [--pdf-out output.pdf] [--pdf-cmd command]");
+        throw new Error("Usage: npm run start -- <input.musicxml> [--out output.musicxml] [--bass-part-id P4] [--analyze] [--analyze-only] [--analyze-out report.txt] [--fugal] [--exclude-figured-bass] [--pdf] [--pdf-out output.pdf] [--pdf-cmd command]");
     }
     let input = "";
     let out = "";
@@ -38,6 +38,7 @@ function parseArgs(argv) {
     let analyzeOnly = false;
     let analyzeOut = "";
     let fugal = false;
+    let includeFiguredBass = true;
     let exportPdf = false;
     let pdfOut = "";
     let pdfCmd = "";
@@ -68,6 +69,14 @@ function parseArgs(argv) {
         if (token === "--fugal") {
             fugal = true;
             analyze = true;
+            continue;
+        }
+        if (token === "--exclude-figured-bass") {
+            includeFiguredBass = false;
+            continue;
+        }
+        if (token === "--include-figured-bass") {
+            includeFiguredBass = true;
             continue;
         }
         if (token === "--pdf") {
@@ -104,7 +113,19 @@ function parseArgs(argv) {
     if (analyzeOnly && exportPdf) {
         throw new Error("--pdf cannot be used with --analyze-only because no score output file is written.");
     }
-    return { input, out, bassPartId, analyze, analyzeOnly, analyzeOut, fugal, exportPdf, pdfOut, pdfCmd };
+    return {
+        input,
+        out,
+        bassPartId,
+        analyze,
+        analyzeOnly,
+        analyzeOut,
+        fugal,
+        includeFiguredBass,
+        exportPdf,
+        pdfOut,
+        pdfCmd,
+    };
 }
 function pickPdfCommand(explicitCmd) {
     const candidates = explicitCmd
@@ -1930,7 +1951,7 @@ function formatAnalysisReport(violations, inputPath) {
     return lines.join("\n");
 }
 function main() {
-    const { input, out, bassPartId, analyze, analyzeOnly, analyzeOut, fugal, exportPdf, pdfOut, pdfCmd } = parseArgs(process.argv);
+    const { input, out, bassPartId, analyze, analyzeOnly, analyzeOut, fugal, includeFiguredBass, exportPdf, pdfOut, pdfCmd, } = parseArgs(process.argv);
     const xmlText = normalizeXmlText(fs.readFileSync(input, "utf8"));
     const score = parseScore(xmlText);
     const parts = asArray(score.part);
@@ -1956,9 +1977,13 @@ function main() {
         sourceXmlForInsert = globallyStripped.strippedXml;
         removedFromOtherStaves = globallyStripped.removedCount;
         // If selected bass had no pre-existing figures, skip noisy "added missing" entries.
-        changes = buildFigureChangeReport(figures, existing, existing.length > 0);
+        if (includeFiguredBass) {
+            changes = buildFigureChangeReport(figures, existing, existing.length > 0);
+        }
     }
-    const outputXml = insertFiguredBass(sourceXmlForInsert, figures, bassPartIndex, true);
+    const outputXml = includeFiguredBass
+        ? insertFiguredBass(sourceXmlForInsert, figures, bassPartIndex, true)
+        : sourceXmlForInsert;
     if (!analyzeOnly) {
         fs.writeFileSync(out, outputXml, "utf8");
         if (exportPdf) {
@@ -1970,6 +1995,7 @@ function main() {
         console.log(`Output: ${out}`);
     if (!analyzeOnly && exportPdf)
         console.log(`PDF:    ${pdfOut}`);
+    console.log(`Include figured bass: ${includeFiguredBass ? "yes" : "no"}`);
     console.log(`Bass part: ${getBassPartId(xmlText, bassPartIndex)}`);
     console.log(`Figure events:    ${figures.length}`);
     console.log(`Non-trivial figures: ${figures.filter((f) => f.slots.length > 0).length}`);

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fugue Analysis Studio</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="bg-layer bg-grid"></div>
+    <div class="bg-layer bg-orb"></div>
+    <main class="shell">
+      <header class="hero">
+        <p class="eyebrow">FIGURED BASS GENERATOR</p>
+        <h1>Fugue Analysis Studio</h1>
+        <p class="subhead">Import MusicXML, choose strict and/or fugal analysis, then render colored reports with or without figured bass.</p>
+      </header>
+
+      <section class="panel">
+        <form id="runForm">
+          <label class="field">
+            <span>MusicXML File</span>
+            <input type="file" name="xmlFile" accept=".xml,.musicxml" required />
+          </label>
+
+          <div class="grid two-col">
+            <fieldset>
+              <legend>Reports to Run</legend>
+              <label><input type="checkbox" name="runStrict" checked /> Strict report</label>
+              <label><input type="checkbox" name="runFugal" /> Fugal report</label>
+            </fieldset>
+
+            <fieldset>
+              <legend>Output Options</legend>
+              <label><input type="checkbox" name="includeFiguredBass" checked /> Include figured bass in outputs</label>
+              <label><input type="checkbox" name="makeColoredPdf" checked /> Create colored score PDF</label>
+            </fieldset>
+          </div>
+
+          <button id="runBtn" type="submit">Run Analysis</button>
+        </form>
+      </section>
+
+      <section class="panel" id="statusPanel" hidden>
+        <h2>Status</h2>
+        <p id="statusText"></p>
+      </section>
+
+      <section class="panel" id="resultPanel" hidden>
+        <h2>Generated Files</h2>
+        <ul id="artifactList"></ul>
+        <details>
+          <summary>Execution logs</summary>
+          <pre id="logBox"></pre>
+        </details>
+      </section>
+
+      <section class="panel preview-panel" id="previewPanel" hidden>
+        <div class="preview-header">
+          <div>
+            <h2>Preview Window</h2>
+            <p>View the generated colored score or switch between available artifacts.</p>
+          </div>
+
+          <label class="preview-select">
+            <span>Preview artifact</span>
+            <select id="previewSelect"></select>
+          </label>
+        </div>
+
+        <iframe id="previewFrame" title="Generated score preview"></iframe>
+      </section>
+    </main>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

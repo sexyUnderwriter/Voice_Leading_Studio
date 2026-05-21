@@ -52,6 +52,27 @@ Optional explicit PDF command (overrides default renderer):
 npm run start -- path/to/score.musicxml --pdf --pdf-cmd my-renderer-cli
 ```
 
+Optional exclude figured bass in generated MusicXML output:
+
+```bash
+npm run start -- path/to/score.musicxml --analyze --exclude-figured-bass
+```
+
+## Web UI
+
+Run a local frontend for uploading MusicXML and choosing analysis outputs:
+
+```bash
+npm run web
+```
+
+Then open `http://localhost:4173`.
+
+UI options:
+- Select strict report and/or fugal report.
+- Include or exclude figured bass in generated colored MusicXML/PDF.
+- Generate colored score PDF (requires MuseScore CLI available).
+
 ## Output columns
 
 - `measure`
