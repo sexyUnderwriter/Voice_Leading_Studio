@@ -1,6 +1,6 @@
-# Figured Bass Generator
+# MusicXML Voice-Leading Analyzer
 
-CLI and web tooling for inferring figured bass from harmonized MusicXML and running voice-leading analysis.
+CLI and web tooling for analyzing harmonized MusicXML voice leading, with optional figured-bass inference.
 
 ## What it does
 

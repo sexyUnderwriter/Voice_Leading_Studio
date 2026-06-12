@@ -1,9 +1,9 @@
 {
-  "name": "figured-bass-generator",
+  "name": "musicxml-voice-leading-analyzer",
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Generate figured-bass figures from harmonized MusicXML with an unfigured bass line.",
+  "description": "Analyze harmonized MusicXML for voice-leading issues and optional figured-bass output.",
   "scripts": {
     "start": "tsx src/index.ts",
     "build": "tsc -p tsconfig.json",

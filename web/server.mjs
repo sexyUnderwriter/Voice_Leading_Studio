@@ -186,7 +186,7 @@ app.post("/api/run", upload.single("xmlFile"), async (req, res) => {
 });
 
 app.get("/api/health", (_req, res) => {
-  res.json({ ok: true, service: "figured-bass-web" });
+  res.json({ ok: true, service: "voice-leading-analysis-web" });
 });
 
 app.listen(port, () => {
