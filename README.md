@@ -1,6 +1,6 @@
 # Figured Bass Generator
 
-A small CLI that reads a harmonized MusicXML file and infers figured-bass symbols above the bass line.
+CLI and web tooling for inferring figured bass from harmonized MusicXML and running voice-leading analysis.
 
 ## What it does
 
@@ -8,7 +8,8 @@ A small CLI that reads a harmonized MusicXML file and infers figured-bass symbol
 - Identifies the bass part automatically (lowest average pitch).
 - For each bass note onset, checks overlapping upper voices.
 - Reduces chord intervals into common figured-bass labels (e.g. `6`, `6/4`, `7`).
-- Writes a CSV report with timestamped figure events.
+- Writes a MusicXML output with inferred figured bass, or excludes figured bass when requested.
+- Optionally runs voice-leading analysis in strict or fugal mode and writes text/JSON reports.
 
 ## Install
 
@@ -22,45 +23,29 @@ npm install
 npm run start -- path/to/score.musicxml
 ```
 
-Optional explicit bass part selection (recommended for scores with multiple low staves):
+Common options:
 
 ```bash
 npm run start -- path/to/score.musicxml --bass-part-id P4
-```
-
-Optional output path:
-
-```bash
-npm run start -- path/to/score.musicxml --out figures.csv
-```
-
-Optional PDF export (default uses headless LilyPond pipeline):
-
-```bash
+npm run start -- path/to/score.musicxml --out path/to/output.musicxml
+npm run start -- path/to/score.musicxml --analyze
+npm run start -- path/to/score.musicxml --analyze --analyze-out path/to/report.txt
+npm run start -- path/to/score.musicxml --fugal --analyze-out path/to/fugal-report.txt
+npm run start -- path/to/score.musicxml --analyze-only --analyze-out path/to/report.txt
+npm run start -- path/to/score.musicxml --exclude-figured-bass
+npm run start -- path/to/score.musicxml --include-figured-bass
 npm run start -- path/to/score.musicxml --pdf
-```
-
-Optional PDF path:
-
-```bash
 npm run start -- path/to/score.musicxml --pdf --pdf-out path/to/score.pdf
-```
-
-Optional explicit PDF command (overrides default renderer):
-
-```bash
 npm run start -- path/to/score.musicxml --pdf --pdf-cmd my-renderer-cli
 ```
 
-Optional exclude figured bass in generated MusicXML output:
+You can also set `PDF_RENDER_CMD` instead of passing `--pdf-cmd`.
 
-```bash
-npm run start -- path/to/score.musicxml --analyze --exclude-figured-bass
-```
+Note: `--pdf` cannot be combined with `--analyze-only`.
 
 ## Web UI
 
-Run a local frontend for uploading MusicXML and choosing analysis outputs:
+Run the local UI for uploading MusicXML and choosing analysis outputs:
 
 ```bash
 npm run web
@@ -71,19 +56,17 @@ Then open `http://localhost:4173`.
 UI options:
 - Select strict report and/or fugal report.
 - Include or exclude figured bass in generated colored MusicXML/PDF.
-- Generate colored score PDF (requires MuseScore CLI available).
+- Generate a colored score PDF (requires MuseScore CLI or `MUSESCORE_CMD`).
 
-## Output columns
+## Outputs
 
-- `measure`
-- `beat`
-- `startDiv`
-- `durationDiv`
-- `bassMidi`
-- `figures`
-- `rawIntervals`
+- Main output score: `*-figured-bass.musicxml` (or custom `--out` path).
+- With `--analyze-out path/to/report.txt`:
+  - Text report at `report.txt`.
+  - JSON report at `report.json`.
+- With `--pdf`: PDF exported from the written MusicXML output.
 
-`figures` is simplified. Empty means a plain 5/3 sonority.
+When a file already contains `<figured-bass>`, the tool validates/updates it and keeps figured bass on only the selected bass staff.
 
 ## Notes
 
